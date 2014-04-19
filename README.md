@@ -6,5 +6,6 @@ ws-nmg
 - Socket.io
 - Express
 - jade
+- CoffeeScript
 
 あたりかな
