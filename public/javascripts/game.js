@@ -8,15 +8,22 @@
     socket.on("connect", function() {
       return console.log("connected");
     });
-    $('#btn').on('click', function() {
+    $('#start').on('click', function() {
+      return socket.emit('turn:start');
+    });
+    $('#draw_card').on('click', function() {
       var message;
       message = $("#message");
-      console.log(message);
-      return socket.emit("msg send", message.val());
+      alert(message);
+      return socket.emit('turn:draw');
     });
+    $('#start').on('click', function() {
+      return socket.emit('turn:start');
+    });
+    socket.on("turn:start", function(msg) {});
     socket.on("msg:push", function(msg) {
       var date;
-      alert(msg);
+      alert("msg");
       date = new Date();
       return console.info('push');
     });

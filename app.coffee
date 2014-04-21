@@ -2,14 +2,16 @@
 ###
 Module dependencies.
 ###
-express = require("express")
-routes = require("./routes")
-user = require("./routes/user")
-http = require("http")
-path = require("path")
-_    = require "underscore"
-socket_io = require 'socket.io'
-app = express()
+express   = require("express")
+routes    = require("./routes")
+user      = require("./routes/user")
+http      = require("http")
+path      = require("path")
+io        = require 'socket.io'
+global._  = require 'underscore'
+mongoose  = require 'mongoose'
+{Game}    = require './src/game'
+app       = express()
 
 # all environments
 app.set "port", process.env.PORT or 3000
@@ -36,22 +38,29 @@ app.get "/users", user.list
 
 server = http.createServer app
 
-io = socket_io.listen server
 server.listen(app.get('port'))
+server_io = io.listen server
 
-io.set('close timeout', 60)
-io.set('heartbeat timeout', 60)
+server_io.set('close timeout', 60)
+server_io.set('heartbeat timeout', 60)
 
-io.sockets.on 'connection', (socket)=>
-  socket.on 'msg send', (msg)=>
-    console.info 'msg sended', msg
+user_id = 0
 
-    socket.emit "msg:push", msg
+game = new Game user_id
+game.start server_io
 
-    socket.broadcast.emit "msg:push",( ->
-      console.info 'broadcast push'
-      msg
-    )()
+# server_io.sockets.on 'connection', (socket)=>
+#   socket.on 'msg send', (msg)=>
+#     console.info 'msg sended', msg
 
-  socket.on "disconnect", =>
-    console.log('disconnect')
+#     socket.emit "msg:push", msg
+
+#     socket.broadcast.emit "msg:push",( ->
+#       console.info 'broadcast push'
+#       msg
+#     )()
+
+#     # socket.broadcast.emit "turn:draw"
+
+#   socket.on "disconnect", =>
+#     console.log('disconnect')
