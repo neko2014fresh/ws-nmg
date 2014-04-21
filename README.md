@@ -23,7 +23,7 @@ $ coffee app.coffee
 ##クライアントサイドのcoffeeのコンパイル
 
 ```
-$ offee -wc public/javascripts/*.coffee
+$ coffee -wc public/javascripts/*.coffee
 ```
 
 - saveのタイミングで、`coffee`のファイルをjsに変換する
