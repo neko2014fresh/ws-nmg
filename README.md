@@ -9,3 +9,12 @@ ws-nmg
 - CoffeeScript
 
 あたりかな
+
+##Get start
+
+```
+$git clone git@github.com:neko2014fresh/ws-nmg.git
+$cd ws-nmg
+$npm install
+$coffee app.coffee
+```
