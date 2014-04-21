@@ -3,5 +3,11 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+    script(src='http://code.jquery.com/jquery-2.1.0.min.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/game.js')
+  bodyw
+    //- block content
+    input(type="text", name="message", id="message")
+    button(id="btn") draw card
+    div(id="chat-area")
