@@ -6,21 +6,23 @@ $(->
     console.log "connected"
 
   $('#start').on 'click', ->
-    socket.emit('turn:start')
+    socket.emit('turn:start')  
 
   $('#draw_card').on 'click', ->
     message = $("#message")
-    alert message
     socket.emit('turn:draw')
 
-  $('#start').on 'click', ->
-    socket.emit('turn:start')
+  $('#sample').on 'click', ->
+    console.log('clicked!!')
+    socket.emit('turn:sample')
 
-  socket.on "turn:start", (msg)=>
+  socket.on 'turn:start_msg', (msg)->
+    alert(msg)
 
+  socket.on "sample", (msg)=>
+    alert(msg)
 
   socket.on "msg:push", (msg)=>
-    alert "msg"
     date = new Date()
     console.info('push')
 

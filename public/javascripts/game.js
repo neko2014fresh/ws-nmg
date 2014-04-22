@@ -14,16 +14,20 @@
     $('#draw_card').on('click', function() {
       var message;
       message = $("#message");
-      alert(message);
       return socket.emit('turn:draw');
     });
-    $('#start').on('click', function() {
-      return socket.emit('turn:start');
+    $('#sample').on('click', function() {
+      console.log('clicked!!');
+      return socket.emit('turn:sample');
     });
-    socket.on("turn:start", function(msg) {});
+    socket.on('turn:start_msg', function(msg) {
+      return alert(msg);
+    });
+    socket.on("sample", function(msg) {
+      return alert(msg);
+    });
     socket.on("msg:push", function(msg) {
       var date;
-      alert("msg");
       date = new Date();
       return console.info('push');
     });

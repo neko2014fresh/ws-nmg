@@ -16,7 +16,7 @@ class Game
     io.sockets.on "connection", (socket) =>
       socket.on 'turn:start', (data)=>
         @state = @State['Start']
-        socket.broadcast.emit "turn:start", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner}
+        socket.broadcast.emit "turn:start_msg", {'turn_owner_id': @current_turn_owner, 'msg': 'カードを引いて下さい'}
 
       socket.on 'turn:draw', (data)=>
         @state = @State['Draw']
@@ -37,6 +37,10 @@ class Game
       socket.on 'turn:other', (data)=>
         @state = @state['Other']
         @otherEvent()
+
+      socket.on 'turn:sample', (data)=>
+        socket.emit "sample", "sample"
+        socket.broadcast.emit "sample", "sample"
 
   loop: =>
     @state = @State['IDLE']
