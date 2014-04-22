@@ -28,4 +28,18 @@ $ coffee -wc public/javascripts/*.coffee
 
 - saveのタイミングで、`coffee`のファイルをjsに変換する
 
-##Rails側から、どうやってuser-idを渡すか。
+##Pry的なDebugをNodeで行う
+
+- node-inspectorをインストール
+
+```
+$ npm install -g node-inspector
+
+#以下のoption渡して起動
+$ coffee --nodejs --debug-brk some.coffee
+
+#some.coffeeのどこかにdebuggerを挟んでおく
+$ node-inspector
+
+$ open http://127.0.0.1:8080/debug?port=5858
+```
