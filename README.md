@@ -15,6 +15,7 @@ ws-nmg
 ##Getting start
 
 ```
+$ brew install node
 $ git clone git@github.com:neko2014fresh/ws-nmg.git
 $ cd ws-nmg
 $ npm install
