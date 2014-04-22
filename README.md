@@ -4,6 +4,7 @@ ws-nmg
 どうせ出来なくても怒られるだけなので、チャレンジしよう、
 ということでNodeを使います
 
+- Node
 - Socket.io
 - Express
 - jade
