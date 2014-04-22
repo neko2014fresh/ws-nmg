@@ -15,22 +15,28 @@ class Game
   start: (io)=>
     io.sockets.on "connection", (socket) =>
       socket.on 'turn:start', (data)=>
+        console.info "turn:start"
         @state = @State['Start']
-        socket.broadcast.emit "turn:start_msg", {'turn_owner_id': @current_turn_owner, 'msg': 'カードを引いて下さい'}
+        io.sockets.emit "turn:start_msg", {'turn_owner_id': @current_turn_owner, 'msg': 'カードを引いて下さい'}
 
       socket.on 'turn:draw', (data)=>
+        console.info "turn:draw"
         @state = @State['Draw']
-        socket.broadcast.emit "turn:draw", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner}
+        io.sockets.emit "turn:draw_end", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner, 'cardType': 'normal card'}
 
       socket.on 'turn:action', (data)=>
+        # return unless @state is State['Draw'] 
         @state = @State['Action']
-        socket.broadcast.emit "turn:action", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner}
+        # action_type = data.actionType
+        io.sockets.emit "turn:action_selected", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner, 'actionType': 'sell to Thailand'}
 
       socket.on 'turn:bet', (data)=>
+        # return unless @state is State['Draw'] 
         @state = @State['Bet']
-        socket.broadcast.emit "turn:bet", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner}
+        io.sockets.emit "turn:bet_end", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner}
 
       socket.on 'turn:finish', (data)=>
+        # return unless @state is State['Draw'] 
         @state = @State['Finish']
         @shuffle_owner()
 
@@ -40,7 +46,11 @@ class Game
 
       socket.on 'turn:sample', (data)=>
         socket.emit "sample", "sample"
-        socket.broadcast.emit "sample", "sample"
+        io.sockets.emit "sample", "sample"
+
+      socket.on 'disconnect', (data)=>
+        console.info("disconnect")
+
 
   loop: =>
     @state = @State['IDLE']

@@ -15,7 +15,7 @@
     "socket.io": "*",
     "stylus": "*",
     "mongoose": "*",
-    "node-inspector": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "sequelize": "*"
   }
 }

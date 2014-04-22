@@ -9,15 +9,25 @@ $(->
     socket.emit('turn:start')  
 
   $('#draw_card').on 'click', ->
-    message = $("#message")
+    console.info "draw card"
     socket.emit('turn:draw')
 
   $('#sample').on 'click', ->
-    console.log('clicked!!')
     socket.emit('turn:sample')
 
-  socket.on 'turn:start_msg', (msg)->
-    alert(msg)
+  $('#action-btn').on 'click', ->
+    action_type = $('#action-type').val()
+    socket.emit 'turn:action', {'actionType': action_type}
+
+  socket.on 'turn:start_msg', (data)->
+    alert(data.msg)
+
+  socket.on 'turn:draw_end', (data)->
+    console.info "draw_end"
+    alert(data.cardType)
+
+  socket.on 'turn:action_selected', (data)->
+    alert(data.actionType)
 
   socket.on "sample", (msg)=>
     alert(msg)

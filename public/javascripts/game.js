@@ -12,16 +12,28 @@
       return socket.emit('turn:start');
     });
     $('#draw_card').on('click', function() {
-      var message;
-      message = $("#message");
+      console.info("draw card");
       return socket.emit('turn:draw');
     });
     $('#sample').on('click', function() {
-      console.log('clicked!!');
       return socket.emit('turn:sample');
     });
-    socket.on('turn:start_msg', function(msg) {
-      return alert(msg);
+    $('#action-btn').on('click', function() {
+      var action_type;
+      action_type = $('#action-type').val();
+      return socket.emit('turn:action', {
+        'actionType': action_type
+      });
+    });
+    socket.on('turn:start_msg', function(data) {
+      return alert(data.msg);
+    });
+    socket.on('turn:draw_end', function(data) {
+      console.info("draw_end");
+      return alert(data.cardType);
+    });
+    socket.on('turn:action_selected', function(data) {
+      return alert(data.actionType);
     });
     socket.on("sample", function(msg) {
       return alert(msg);
