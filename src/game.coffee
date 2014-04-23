@@ -21,10 +21,9 @@ class Game
         # clients = io.sockets.clients()
         clients = 'hoge'
         @state = @State['Select']
-        io.socket.emit "turn:country_selected", {'user_id': 0, 'country': 'Thailand', 'clients': clients}
+        io.sockets.emit "turn:country_selected", { 'user_id': 0, 'country': 'Thailand', 'clients': clients }
 
       socket.on 'turn:start', (data)=>
-        console.log clients
         @state = @State['Start']
         io.sockets.emit "turn:start_msg", {'turn_owner_id': @current_turn_owner, 'msg': 'カードを引いて下さい'}
 
