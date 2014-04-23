@@ -7,6 +7,7 @@ class Game
     'Finish' : 4
     'Other'  : 5
     'Idle'   : 6
+    'Select' : 7
 
   constructor: (user_id) ->
     @state = @State['Start']
@@ -14,8 +15,16 @@ class Game
 
   start: (io)=>
     io.sockets.on "connection", (socket) =>
+
+      socket.on 'turn:country', (data) =>
+        console.log "select:country"
+        # clients = io.sockets.clients()
+        clients = 'hoge'
+        @state = @State['Select']
+        io.socket.emit "turn:country_selected", {'user_id': 0, 'country': 'Thailand', 'clients': clients}
+
       socket.on 'turn:start', (data)=>
-        console.info "turn:start"
+        console.log clients
         @state = @State['Start']
         io.sockets.emit "turn:start_msg", {'turn_owner_id': @current_turn_owner, 'msg': 'カードを引いて下さい'}
 

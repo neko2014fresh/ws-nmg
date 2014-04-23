@@ -29,8 +29,12 @@ app.use express.static(path.join(__dirname, "public"))
 app.use express.errorHandler()  if "development" is app.get("env")
 
 app.get "/", routes.index
-
 app.get "/users", user.list
+
+# config に国一覧を
+countryModel = require './models/country'
+db = countryModel.createConnection 'mongodb://127.0.0.1/countries'
+Country = db.model 'Country'
 
 # http.createServer(app).listen app.get("port"), ->
 #   console.log "Express server listening on port " + app.get("port")
@@ -52,14 +56,11 @@ game.start server_io
 # server_io.sockets.on 'connection', (socket)=>
 #   socket.on 'msg send', (msg)=>
 #     console.info 'msg sended', msg
-
 #     socket.emit "msg:push", msg
-
 #     socket.broadcast.emit "msg:push",( ->
 #       console.info 'broadcast push'
 #       msg
 #     )()
-
 #     # socket.broadcast.emit "turn:draw"
 
 #   socket.on "disconnect", =>

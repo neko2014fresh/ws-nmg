@@ -8,6 +8,13 @@
     socket.on("connect", function() {
       return console.log("connected");
     });
+    $('#select-country-btn').on('click', function() {
+      var country;
+      country = $('#select-country').val();
+      return socket.emit('turn:country', {
+        'country': country
+      });
+    });
     $('#start').on('click', function() {
       return socket.emit('turn:start');
     });
@@ -24,6 +31,9 @@
       return socket.emit('turn:action', {
         'actionType': action_type
       });
+    });
+    socket.on('turn:country_selected', function(dayta) {
+      return alert('#{data.user_id}が#{data.country}');
     });
     socket.on('turn:start_msg', function(data) {
       return alert(data.msg);

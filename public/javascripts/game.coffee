@@ -1,9 +1,15 @@
+
+
 $(->
   console.log 'loaded'
 
   socket = io.connect()
   socket.on "connect", =>
     console.log "connected"
+
+  $('#select-country-btn').on 'click', ->
+    country = $('#select-country').val()
+    socket.emit('turn:country', {'country': country})
 
   $('#start').on 'click', ->
     socket.emit('turn:start')  
@@ -18,6 +24,9 @@ $(->
   $('#action-btn').on 'click', ->
     action_type = $('#action-type').val()
     socket.emit 'turn:action', {'actionType': action_type}
+
+  socket.on 'turn:country_selected', (dayta)->
+    alert('#{data.user_id}が#{data.country}')
 
   socket.on 'turn:start_msg', (data)->
     alert(data.msg)
