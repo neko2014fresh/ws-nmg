@@ -38,7 +38,7 @@ Country = db.model 'Country'
 
 userModel = require './models/player'
 db = countryModel.createConnection 'mongodb://127.0.0.1/players'
-Player = db:model 'Player'
+Player = db.model 'Player'
 
 # http.createServer(app).listen app.get("port"), ->
 #   console.log "Express server listening on port " + app.get("port")
