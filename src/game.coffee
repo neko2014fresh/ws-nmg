@@ -17,11 +17,8 @@ class Game
     io.sockets.on "connection", (socket) =>
 
       socket.on 'turn:country', (data) =>
-        console.log "select:country"
-        # clients = io.sockets.clients()
-        clients = 'hoge'
         @state = @State['Select']
-        io.sockets.emit "turn:country_selected", { 'user_id': 0, 'country': 'Thailand', 'clients': clients }
+        io.sockets.emit "turn:country_selected", { 'user_id': 0, 'country': 'Thailand', 'clients': '' }
 
       socket.on 'turn:start', (data)=>
         @state = @State['Start']

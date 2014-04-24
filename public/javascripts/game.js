@@ -32,8 +32,8 @@
         'actionType': action_type
       });
     });
-    socket.on('turn:country_selected', function(dayta) {
-      return alert('#{data.user_id}が#{data.country}');
+    socket.on('turn:country_selected', function(data) {
+      return alert("" + data.user_id + "が" + data.country + "を選びました");
     });
     socket.on('turn:start_msg', function(data) {
       return alert(data.msg);

@@ -5,12 +5,14 @@ Module dependencies.
 express   = require("express")
 routes    = require("./routes")
 user      = require("./routes/user")
+register  = require("./routes/register")
 http      = require("http")
 path      = require("path")
 io        = require 'socket.io'
 global._  = require 'underscore'
 mongoose  = require 'mongoose'
 {Game}    = require './src/game'
+{ModelGenerator} = require './model_generator'
 app       = express()
 
 # all environments
@@ -30,15 +32,18 @@ app.use express.errorHandler()  if "development" is app.get("env")
 
 app.get "/", routes.index
 app.get "/users", user.list
+debugger
+app.get "/register", register.register
 
 # config に国一覧を
 countryModel = require './models/country'
 db = countryModel.createConnection 'mongodb://127.0.0.1/countries'
 Country = db.model 'Country'
 
-userModel = require './models/player'
-db = countryModel.createConnection 'mongodb://127.0.0.1/players'
+playerModel = require './models/player'
+db = playerModel.createConnection 'mongodb://127.0.0.1/players'
 Player = db.model 'Player'
+
 
 # http.createServer(app).listen app.get("port"), ->
 #   console.log "Express server listening on port " + app.get("port")

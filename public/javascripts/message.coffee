@@ -8,4 +8,3 @@ Msg =
   userDrawCard: (name, card)->
     "#{name}が#{card}を引きました"
 
-  

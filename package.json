@@ -10,6 +10,7 @@
     "jade": "*",
     "sass": "*",
     "coffee-script": "*",
+    "coffee-trace": "*",
     "js2coffee": "*",
     "underscore": "*",
     "socket.io": "*",
