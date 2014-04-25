@@ -8,6 +8,16 @@
     socket.on("connect", function() {
       return console.log("connected");
     });
+    setTimeout(function() {
+      return console.info('check update');
+    }, 1000);
+    $('#select-country-btn').on('click', function() {
+      var country;
+      country = $('#select-country').val();
+      return socket.emit('turn:country', {
+        'country': country
+      });
+    });
     $('#start').on('click', function() {
       return socket.emit('turn:start');
     });
@@ -24,6 +34,9 @@
       return socket.emit('turn:action', {
         'actionType': action_type
       });
+    });
+    socket.on('turn:country_selected', function(data) {
+      return alert("" + data.user_id + "が" + data.country + "を選びました");
     });
     socket.on('turn:start_msg', function(data) {
       return alert(data.msg);
