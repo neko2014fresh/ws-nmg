@@ -8,6 +8,9 @@
     socket.on("connect", function() {
       return console.log("connected");
     });
+    setTimeout(function() {
+      return console.info('check update');
+    }, 1000);
     $('#select-country-btn').on('click', function() {
       var country;
       country = $('#select-country').val();

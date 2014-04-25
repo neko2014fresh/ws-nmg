@@ -7,6 +7,10 @@ $(->
   socket.on "connect", =>
     console.log "connected"
 
+  setTimeout ->
+    console.info 'check update'
+  , 1000
+
   $('#select-country-btn').on 'click', ->
     country = $('#select-country').val()
     socket.emit('turn:country', {'country': country})

@@ -13,6 +13,7 @@
     "coffee-trace": "*",
     "js2coffee": "*",
     "underscore": "*",
+    "underscore.string": "*",
     "socket.io": "*",
     "stylus": "*",
     "mongoose": "*",

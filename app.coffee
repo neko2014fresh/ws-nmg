@@ -9,10 +9,11 @@ register  = require("./routes/register")
 http      = require("http")
 path      = require("path")
 io        = require 'socket.io'
-global._  = require 'underscore'
+GLOBAL._  = require 'underscore'
+GLOBAL._.str = require 'underscore.string'
 mongoose  = require 'mongoose'
 {Game}    = require './src/game'
-{ModelGenerator} = require './model_generator'
+{ModelWrapper} = require './model_generator'
 app       = express()
 
 # all environments
@@ -32,7 +33,6 @@ app.use express.errorHandler()  if "development" is app.get("env")
 
 app.get "/", routes.index
 app.get "/users", user.list
-debugger
 app.get "/register", register.register
 
 # config に国一覧を

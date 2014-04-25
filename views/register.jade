@@ -7,9 +7,16 @@ html
     script(src='/socket.io/socket.io.js')
     script(src='/javascripts/game.js')
   body
+
+    label(for="player-name") player name
+    br
+    input(type="text", name="player-name", id="player-name")
+    br
+    br
     select(id="register-country", name="register-country")
         option(value='thailand') thailand
         option(value='vietnum') vietnum
         option(value='indnesia') indnesia
         option(value='Malaysia') Malaysia
-    button(id="register-country-btn")　これに決めた！
+    br
+    button(id="register-country-btn") decide
