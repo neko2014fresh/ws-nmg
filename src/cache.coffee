@@ -29,7 +29,7 @@ class Calculator
     @interest = args["interest"]
 
     # 固定費
-    @fixed_cost = @labor_expenses + @chip_expenses + @rental_expenses +@interest
+    fixed_cost = @labor_expenses + @chip_expenses + @rental_expenses +@interest
 
     # 借入金返済費用
     @back_debt = args["back_debt"]
@@ -39,7 +39,7 @@ class Calculator
     @asset_payment = args["asset_payment"]
 
     # 総支出
-    @total_expenditures = @stock_cost + @fixed_cost + @back_debt +@extra_loss +@asset_payment
+    total_expenditures = @stock_cost + fixed_cost + @back_debt +@extra_loss +@asset_payment
 
 
     # 商品個数
@@ -63,50 +63,55 @@ class Calculator
     # 前期（ゲーム開始時）借入金
     @initial_debt = args["initial_debt"]
 
-    # 手持ち現金？？
-    @cache = @initial_cache + @total_sales - @total_expenditures
+    # # 手持ち現金？？
+    # @cache = @initial_cache + total_sales - total_expenditures
 
     # 棚卸(商品価格1.9,固定)
-    @inventory = 1.9 * @number_products
+    inventory = 1.9 * @number_products
     # 売上原価（変動費）
-    @sales_cost = @stock_cost + @initial_inventory  - @inventory
+    sales_cost = @stock_cost + @initial_inventory  - inventory
     # 売上総利益（粗利）
-    @margin = @sales - @sales_cost
-    # 純利益
-    @net_income = @sales - @sales_cost -@fixed_cost
+    margin = @sales - sales_cost
+    # 経常利益（ボード版では出なかった）
+    ordinary_profit = margin - fixed_cost
+    # # 純利益
+    # @net_profit = @sales - sales_cost - fixed_cost - @back_debt - @extra_loss - @asset_payment
+
+    # 法人税
+    corporation_tax = 
 
     # 前期剰余金
-    @surplus = @initial_surplus + @net_income - @corporation_tax
+    surplus = @initial_surplus + @net_profit - @corporation_tax
 
     # 流動資産
-    @liquid_assets = @cache + @inventory
+    liquid_assets = @cache + @inventory
     # 資産合計
-    @total_assets = @liquid_assets
+    total_assets = @liquid_assets
     # 負債
-    @total_debt = @debt - @back_debt + @corporation_tax
+    total_debt = @debt - @back_debt + @corporation_tax
     # 純資産
     @total_equity = @capital + @surplus
 
 
-  # 手持ち現金計算 (要:ゲーム開始時の手持ち現金)？
+  # 手持ち現金計算 (要:ゲーム開始時の手持ち現金)
   currentCache: (initial_cache)->
-    cache = initial_cache + @total_sales - @total_expenditures
+    cache = initial_cache + total_sales - total_expenditures
     # return cache
 
   # 棚卸計算（要：商品換算額 　デフォルト値1.9）
   inventory: (price_product = 1.9)->
     @inventory = price_product * @number_products
 
-  # 純利益計算？
-  netIncome: ->
-    net_income = @sales - @sales_cost -@fixed_cost
+  # 純利益計算
+  netProfit: ->
+    net_profit = @sales - sales_cost - fixed_cost - @back_debt - @extra_loss - @asset_payment
 
   # 法人税額計算(要：税率 デフォルト値0.4)
   corporation_tax: (tax_rate = 0.4)->
-    if ( @initial_surplus + @net_income < 0 )
-      @corporation_tax = 0
+    if ( @initial_surplus + ordinary_profit < 0 )
+      corporation_tax = 0
     else
-      @corporation_tax = net_income * tax_rate
+      corporation_tax = net_income * tax_rate
 
 
   fukidomethod: (number_of_product)->
