@@ -78,7 +78,7 @@ class Calculator
     # @net_profit = @sales - sales_cost - fixed_cost - @back_debt - @extra_loss - @asset_payment
 
     # 法人税
-    corporation_tax = 
+    corporation_tax = @corporationTax()
 
     # 前期剰余金
     surplus = @initial_surplus + @net_profit - @corporation_tax
@@ -88,14 +88,15 @@ class Calculator
     # 資産合計
     total_assets = @liquid_assets
     # 負債
-    total_debt = @debt - @back_debt + @corporation_tax
+    total_debt = @debt - @back_debt + corporation_tax
+    capital = 
     # 純資産
-    @total_equity = @capital + @surplus
+    @total_equity = capital + @investment_sales + @asset_sales + surplus 
 
 
   # 手持ち現金計算 (要:ゲーム開始時の手持ち現金)
-  currentCache: (initial_cache)->
-    cache = initial_cache + total_sales - total_expenditures
+  currentCache: ->
+    cache = @initial_cache + total_sales - total_expenditures
     # return cache
 
   # 棚卸計算（要：商品換算額 　デフォルト値1.9）
@@ -105,13 +106,15 @@ class Calculator
   # 純利益計算
   netProfit: ->
     net_profit = @sales - sales_cost - fixed_cost - @back_debt - @extra_loss - @asset_payment
+    # return net_profit
 
   # 法人税額計算(要：税率 デフォルト値0.4)
-  corporation_tax: (tax_rate = 0.4)->
+  corporationTax: (tax_rate = 0.4)->
     if ( @initial_surplus + ordinary_profit < 0 )
-      corporation_tax = 0
+      @corporation_tax = 0
     else
-      corporation_tax = net_income * tax_rate
+      @corporation_tax = net_income * tax_rate
+    return @corporation_tax
 
 
   fukidomethod: (number_of_product)->
