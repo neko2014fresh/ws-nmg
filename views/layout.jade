@@ -9,11 +9,19 @@ html
     script(src='/javascripts/game.js')
   body
     //- block content
+    select(id="select-country", name="select-country")
+        option(value='thailand') thailand
+        option(value='vietnum') vietnum
+        option(value='indnesia') indnesia
+    button(id="select-country-btn")　これに決めた！
+    br
+    br
+    br
+    br
     input(type="text", name="message", id="message")
     button(id="start") start
     button(id="draw_card") draw card
     button(id="turn_start") turn start
-    button(id="bet") bet
     button(id="sample") sample
     br
     br

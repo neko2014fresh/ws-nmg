@@ -1,3 +1,5 @@
+
+
 $(->
   console.log 'loaded'
 
@@ -5,8 +7,16 @@ $(->
   socket.on "connect", =>
     console.log "connected"
 
+  setTimeout ->
+    console.info 'check update'
+  , 1000
+
+  $('#select-country-btn').on 'click', ->
+    country = $('#select-country').val()
+    socket.emit('turn:country', {'country': country})
+
   $('#start').on 'click', ->
-    socket.emit('turn:start')  
+    socket.emit('turn:start')
 
   $('#draw_card').on 'click', ->
     console.info "draw card"
@@ -18,6 +28,9 @@ $(->
   $('#action-btn').on 'click', ->
     action_type = $('#action-type').val()
     socket.emit 'turn:action', {'actionType': action_type}
+
+  socket.on 'turn:country_selected', (data)->
+    alert("#{data.user_id}が#{data.country}を選びました")
 
   socket.on 'turn:start_msg', (data)->
     alert(data.msg)
