@@ -67,7 +67,7 @@ class Calculator
     # @cache = @initial_cache + total_sales - total_expenditures
 
     # 棚卸(商品価格1.9,固定)
-    inventory = 1.9 * @number_products
+    inventory = @inventory()
     # 売上原価（変動費）
     sales_cost = @stock_cost + @initial_inventory  - inventory
     # 売上総利益（粗利）
