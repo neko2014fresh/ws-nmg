@@ -49,27 +49,28 @@ $(->
     alert(data.actionType)
 
   socket.on 'all_country', (data)=>
-    _.map data.countries, (country)->
-      html = "
-        <div id='#{country.name}' class='countries'>
-          <div class='country-name'>
-            国名:...#{country.name}
+    if $('#countries').children().length == 0
+      _.map data.countries, (country)=>
+        html = "
+          <div id='#{country.name}' class='countries'>
+            <div class='country-name'>
+              国名:...#{country.name}
+            </div>
+            <div class='market-scale'>
+              市場規模:...#{country.market_scale}
+            </div>
+            <div class='max-price'>
+              最高値:...#{country.max_price}
+            </div>
+            <div class='buying_price'>
+              仕入れ値:...#{country.buying_price}
+            </div>
+            <div class='owner'>
+              本社...#{country.player_name}
+            </div>
           </div>
-          <div class='market-scale'>
-            市場規模:...#{country.market_scale}
-          </div>
-          <div class='max-price'>
-            最高値:...#{country.max_price}
-          </div>
-          <div class='buying_price'>
-            仕入れ値:...#{country.buying_price}
-          </div>
-          <div class='owner'>
-            本社...#{country.player_name}
-          </div>
-        </div>
-        "
-      $('#countries').append(html)
+          "
+        $('#countries').append(html)
 
   socket.on 'update_country', (data) =>
     country = data.country

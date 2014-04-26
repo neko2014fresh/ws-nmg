@@ -11,7 +11,7 @@ class Game
   ids: []
   playerMap: {}
   socketMap: {}
-  current_turn_owner: ''
+  current_turn_owner: 0
 
   constructor: ->
     @state = @State['Start']
@@ -50,20 +50,23 @@ class Game
         io.sockets.emit 'update_country', 'country': country, 'name': player_name
 
       socket.on 'turn:init_start', (data)=>
+        console.log 'turn:init_start'
         @state = @State['Start']
         id = _.first @ids
         name = @playerMap["#{id}"]
         console.log "createGameId():::", id
         @current_turn_owner = id
+        console.log '@current_turn_owner:::', @current_turn_owner
 
         io.sockets.emit "turn:start_msg", {'current_turn_owner': name}
 
       socket.on 'turn:start', (data)=>
+        console.log 'turn:start'
         console.log 'turn_owner...', @current_turn_owner
         console.log 'socket_id....', socket.id
         console.log 'socketMap...', @socketMap
         if @validate_turn_and_player @current_turn_owner, socket
-          console.log 'not correct user!!!!'; return 
+          console.log 'not correct user!!!!'; return
 
       socket.on 'turn:draw', (data)=>
         console.info "turn:draw"
