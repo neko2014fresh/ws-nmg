@@ -1,6 +1,6 @@
 class Calculator
   constructor: (args) ->
-
+  # キャッシュフロー計算
     # 売り上げ
     @sales = args["sales"]
     # 借入金
@@ -10,13 +10,8 @@ class Calculator
     # 資産売却
     @asset_sales = args["asset_sales"]
 
-    # # 総収入
-    # @total_sales = @sales + @debt + @investment_sales + @asset_sales
-
-
     # 商品仕入(原価)
     @stock_cost = args["stock_cost"]
-
     # 人件費
     @labor_expenses = args["labor_expenses"]
     # チップ購入費用
@@ -27,10 +22,6 @@ class Calculator
     @other_expenses = args["other_expenses"]
     # 支払利息
     @interest = args["interest"]
-
-    # # 固定費
-    # @fixed_cost = @labor_expenses + @chip_expenses + @rental_expenses +@interest
-
     # 借入金返済費用
     @back_debt = args["back_debt"]
     # 特別損失
@@ -38,15 +29,10 @@ class Calculator
     # 固定資産購入費用
     @asset_payment = args["asset_payment"]
 
-    # # 総支出
-    # @total_expenditures = @stock_cost + fixed_cost + @back_debt +@extra_loss +@asset_payment
-
-
     # 商品個数
     @number_products = args["number_product"]
     # 社員数
     @number_employees = args["number_employees"]
-
 
     # ゲーム開始時の手持ち現金？
     @initial_number_products = args["initial_number_products"]
@@ -62,37 +48,6 @@ class Calculator
     @initial_capital = args["initial_capital"]
     # 前期（ゲーム開始時）借入金
     @initial_debt = args["initial_debt"]
-
-    # # 手持ち現金？？
-    # @cache = @initial_cache + total_sales - total_expenditures
-
-    # # 棚卸(商品価格1.9,固定)
-    # @inventory = @inventory()
-    # # 売上原価（変動費）
-    # @sales_cost = @stock_cost + @initial_inventory  - inventory
-    # # 売上総利益（粗利）
-    # @margin = @sales - sales_cost
-    # # 経常利益（ボード版では出なかった）
-    # @ordinary_profit = margin - fixed_cost
-    # # 純利益
-    # @net_profit = @sales - sales_cost - fixed_cost - @back_debt - @extra_loss - @asset_payment
-
-    # # 法人税
-    # @corporation_tax = @corporationTax()
-
-    # # 前期剰余金
-    # @surplus = @initial_surplus + @net_profit - @corporation_tax
-
-    # # 流動資産
-    # @liquid_assets = @cache + @inventory
-    # # 資産合計
-    # @total_assets = @liquid_assets
-    # # 負債
-    # @total_debt = @debt - @back_debt + corporation_tax
-
-    # capital = 
-    # # 純資産
-    # @total_equity = capital + @investment_sales + @asset_sales + surplus 
 
 
   # 総収入計算
@@ -160,13 +115,6 @@ class Calculator
   totalEquity: ->
     total_equity = @currentCapital + @surplus
     return total_equity
-
-
-
-  fukidomethod: (number_of_product)->
-    unit_price = 100
-    @sell_price = number_of_product * unit_price
-    return @sell_price
 
 #calc = new Calculator
 #calc.sales += 100
