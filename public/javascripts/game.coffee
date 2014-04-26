@@ -11,9 +11,14 @@ $(->
     console.info 'check update'
   , 1000
 
-  $('#select-country-btn').on 'click', ->
-    country = $('#select-country').val()
-    socket.emit('turn:country', {'country': country})
+  # $('#confirm-country').on 'click', ->
+  #   console.info 'confirm-country'
+  socket.emit('get_all_country')
+
+  $('#register-country-btn').on 'click', ->
+    player_name = $('#player-name').val()
+    register_country = $('#register-country').val()
+    socket.emit "save_player_and_country", 'player_name': player_name, 'country': register_country
 
   $('#start').on 'click', ->
     socket.emit('turn:start')
@@ -41,6 +46,34 @@ $(->
 
   socket.on 'turn:action_selected', (data)->
     alert(data.actionType)
+
+  socket.on 'all_country', (data)=>
+    _.map data.countries, (country)->
+      html = "
+        <div id='#{country.name}'>
+          <div class='country-name'>
+            国名:...#{country.name}
+          </div>
+          <div class='market-scale'>
+            市場規模:...#{country.market_scale}
+          </div>
+          <div class='max-price'>
+            最高値:...#{country.max_price}
+          </div>
+          <div class='buying_price'>
+            仕入れ値:...#{country.buying_price}
+          </div>
+          <div class='owner'>
+            本社...#{country.player_name}
+          </div>
+        </div>
+        "
+      $('#countries').append(html)
+
+  socket.on 'update_country', (data) =>
+    country = data.country
+    player_name = data.player_name
+    $('#' + "#{country} .owner").html(player_name)
 
   socket.on "sample", (msg)=>
     alert(msg)

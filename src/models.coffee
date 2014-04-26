@@ -12,12 +12,16 @@ ProductSchema = new mongoose.Schema
   type: type: String
 
 CountrySchema = new mongoose.Schema
-  name: type: String
+  name: type: String, unique: true
   market_scale: type: Number
   market_rest: type: Number, default: 0
   max_price: type: Number
   buying_price: type: Number
   player_id: type: Number
+  player_name: type: String
+
+GameDataSchema = new mongoose.Schema
+  player_ids: type: [], values: [Number]
 
 url = 'mongodb://127.0.0.1/ws-nmg'
 
@@ -27,3 +31,4 @@ db = mongoose.createConnection url, (err, res)->
 exports.Player  = db.model 'Player', PlayerSchema
 exports.Product = db.model 'Product', ProductSchema
 exports.Country = db.model 'Country', CountrySchema
+exports.GameData = db.model 'GameData', GameDataSchema

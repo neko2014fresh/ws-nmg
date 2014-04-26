@@ -16,6 +16,26 @@ class Game
   start: (io)=>
     io.sockets.on "connection", (socket) =>
 
+      socket.on 'get_all_country', =>
+        Country.find {}, (err, country)=>
+          params = 'countries': country
+          io.sockets.emit 'all_country', params
+
+      socket.on 'save_player_and_country', (data)=>
+        player_name = data.player_name
+        country = data.register_country
+
+        player = new Player()
+        player.name = player_name
+        # player.id = GameData.createGameId()
+        # GameData.addId player.id
+        # GameData.registerPlayer "#{player.id}": "#{player.name}"  
+        player.country = country
+
+        player.save (err)->
+          console.log 'success for saving user' unless err
+        io.sockets.emit 'update_country', 'country': country, 'name': player_name
+
       socket.on 'turn:country', (data) =>
         @state = @State['Select']
         io.sockets.emit "turn:country_selected", { 'user_id': 0, 'country': 'Thailand', 'clients': '' }
@@ -30,18 +50,18 @@ class Game
         io.sockets.emit "turn:draw_end", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner, 'cardType': 'normal card'}
 
       socket.on 'turn:action', (data)=>
-        # return unless @state is State['Draw'] 
+        # return unless @state is State['Draw']
         @state = @State['Action']
         # action_type = data.actionType
         io.sockets.emit "turn:action_selected", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner, 'actionType': 'sell to Thailand'}
 
       socket.on 'turn:bet', (data)=>
-        # return unless @state is State['Draw'] 
+        # return unless @state is State['Draw']
         @state = @State['Bet']
         io.sockets.emit "turn:bet_end", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner}
 
       socket.on 'turn:finish', (data)=>
-        # return unless @state is State['Draw'] 
+        # return unless @state is State['Draw']
         @state = @State['Finish']
         @shuffle_owner()
 
@@ -58,6 +78,9 @@ class Game
 
   loop: =>
     @state = @State['IDLE']
+
+  check_turn_and_correct_owner: ()=>
+
 
   shuffle_owner: =>
     @current_turn_owner += 1

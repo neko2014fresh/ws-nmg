@@ -11,11 +11,14 @@
     setTimeout(function() {
       return console.info('check update');
     }, 1000);
-    $('#select-country-btn').on('click', function() {
-      var country;
-      country = $('#select-country').val();
-      return socket.emit('turn:country', {
-        'country': country
+    socket.emit('get_all_country');
+    $('#register-country-btn').on('click', function() {
+      var player_name, register_country;
+      player_name = $('#player-name').val();
+      register_country = $('#register-country').val();
+      return socket.emit("save_player_and_country", {
+        'player_name': player_name,
+        'country': register_country
       });
     });
     $('#start').on('click', function() {
@@ -47,6 +50,19 @@
     });
     socket.on('turn:action_selected', function(data) {
       return alert(data.actionType);
+    });
+    socket.on('all_country', function(data) {
+      return _.map(data.countries, function(country) {
+        var html;
+        html = "        <div id='" + country.name + "'>          <div class='country-name'>            国名:..." + country.name + "          </div>          <div class='market-scale'>            市場規模:..." + country.market_scale + "          </div>          <div class='max-price'>            最高値:..." + country.max_price + "          </div>          <div class='buying_price'>            仕入れ値:..." + country.buying_price + "          </div>          <div class='owner'>            本社..." + country.player_name + "          </div>        </div>        ";
+        return $('#countries').append(html);
+      });
+    });
+    socket.on('update_country', function(data) {
+      var country, player_name;
+      country = data.country;
+      player_name = data.player_name;
+      return $('#' + ("" + country + " .owner")).html(player_name);
     });
     socket.on("sample", function(msg) {
       return alert(msg);
