@@ -56,7 +56,6 @@ class Game
       socket.on 'disconnect', (data)=>
         console.info("disconnect")
 
-
   loop: =>
     @state = @State['IDLE']
 
