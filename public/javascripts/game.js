@@ -21,6 +21,9 @@
         'country': register_country
       });
     });
+    $('#init-start').on('click', function() {
+      return socket.emit('turn:init_start');
+    });
     $('#start').on('click', function() {
       return socket.emit('turn:start');
     });
@@ -42,7 +45,7 @@
       return alert("" + data.user_id + "が" + data.country + "を選びました");
     });
     socket.on('turn:start_msg', function(data) {
-      return alert(data.msg);
+      return alert("" + current_turn_owner + "のターンです");
     });
     socket.on('turn:draw_end', function(data) {
       console.info("draw_end");

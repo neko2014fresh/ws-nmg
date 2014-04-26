@@ -9,12 +9,12 @@ class Game
     'Idle'   : 6
     'Select' : 7
   ids: []
-  playerMap = {}
-  socketMap = {}
+  playerMap: {}
+  socketMap: {}
+  current_turn_owner: ''
 
-  constructor: (user_id) ->
+  constructor: ->
     @state = @State['Start']
-    @current_turn_owner = user_id
 
   start: (io)=>
     io.sockets.on "connection", (socket) =>
@@ -34,28 +34,36 @@ class Game
         @addIds id
         player.game_id = id
         @playerMap['#{id}'] = player_name
-        @socketMap['#{socket.id}'] = id
+        @socketMap["#{id}"] = socket.id
         player.country = country
 
         player.save (err)->
-          console.log 'success for saving user:=>', player unless err
+          console.log 'success for saving user' unless err
 
         Country.findOne {'name': country }, (err, c)=>
           console.log 'country:', c
           c.player_id = player.game_id
           c.player_name = player.name
           c.save (err)=>
-            console.log 'success for saving country', c if err
+            console.log 'success for saving country' if err
 
         io.sockets.emit 'update_country', 'country': country, 'name': player_name
 
-      socket.on 'turn:start', (data)=>
-        console.log 'socketMap::', @socketMap
+      socket.on 'turn:init_start', (data)=>
         @state = @State['Start']
         id = _.first @ids
         name = @playerMap["#{id}"]
+        console.log "createGameId():::", id
+        @current_turn_owner = id
 
-        io.sockets.emit "turn:start_msg", {'turn_owner_name': name}
+        io.sockets.emit "turn:start_msg", {'current_turn_owner': name}
+
+      socket.on 'turn:start', (data)=>
+        console.log 'turn_owner...', @current_turn_owner
+        console.log 'socket_id....', socket.id
+        console.log 'socketMap...', @socketMap
+        if @validate_turn_and_player @current_turn_owner, socket
+          console.log 'not correct user!!!!'; return 
 
       socket.on 'turn:draw', (data)=>
         console.info "turn:draw"
@@ -92,10 +100,12 @@ class Game
   loop: =>
     @state = @State['IDLE']
 
-  check_turn_and_correct_owner: (id)=>
+  validate_turn_and_player: (player_id, socket)=>
+    return true unless @socketMap["#{player_id}"] is socket.id
 
   addIds: (id)=>
     @ids.push id
+    console.log 'addIds:::', @ids
 
   createGameId: =>
     initial_id = 0

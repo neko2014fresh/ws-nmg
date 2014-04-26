@@ -90,13 +90,11 @@ app.post '/sample_register', (req, res)->
 server = http.createServer app
 
 server.listen(app.get('port'))
-server_io = io.listen server
+server_io = io.listen server, { log: false }
 
 server_io.set('close timeout', 60)
 server_io.set('heartbeat timeout', 60)
 
-user_id = 0
-
-game = new Game user_id
+game = new Game
 game.start server_io
 

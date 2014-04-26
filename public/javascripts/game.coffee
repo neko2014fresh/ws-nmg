@@ -11,14 +11,15 @@ $(->
     console.info 'check update'
   , 1000
 
-  # $('#confirm-country').on 'click', ->
-  #   console.info 'confirm-country'
   socket.emit('get_all_country')
 
   $('#register-country-btn').on 'click', ->
     player_name = $('#player-name').val()
     register_country = $('#register-country').val()
     socket.emit "save_player_and_country", 'player_name': player_name, 'country': register_country
+
+  $('#init-start').on 'click', ->
+    socket.emit('turn:init_start')
 
   $('#start').on 'click', ->
     socket.emit('turn:start')
@@ -38,7 +39,7 @@ $(->
     alert("#{data.user_id}が#{data.country}を選びました")
 
   socket.on 'turn:start_msg', (data)->
-    alert(data.msg)
+    alert("#{current_turn_owner}のターンです")
 
   socket.on 'turn:draw_end', (data)->
     console.info "draw_end"
