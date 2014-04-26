@@ -8,3 +8,5 @@ Msg =
   userDrawCard: (name, card)->
     "#{name}が#{card}を引きました"
 
+
+exports.Msg = Msg

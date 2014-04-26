@@ -3,6 +3,11 @@ class GameData
   ids: []
   player_mapper: {}
 
+  @createId: =>
+    0 = initial_id
+    id = if @ids then _.last @ids else initial_id
+    id += 1
+
   @addId: (id)=>
     @ids.push id
 

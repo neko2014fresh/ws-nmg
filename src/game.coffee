@@ -13,7 +13,6 @@ class Game
 
   constructor: (user_id) ->
     console.info 'game...init..'
-    debugger
     @state = @State['Start']
     @current_turn_owner = user_id
 

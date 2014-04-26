@@ -1,10 +1,8 @@
-
 ###
 Module dependencies.
 ###
 express   = require("express")
 routes    = require("./routes")
-user      = require("./routes/user")
 register  = require("./routes/register")
 http      = require("http")
 path      = require("path")
@@ -44,7 +42,6 @@ Player = db.model 'Player'
 exports.Player = Player
 
 app.get "/", routes.index
-app.get "/users", user.list
 app.get "/register", register.register
 
 app.post '/finish_register', (req, res)->
