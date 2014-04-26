@@ -54,15 +54,15 @@
     socket.on('all_country', function(data) {
       return _.map(data.countries, function(country) {
         var html;
-        html = "        <div id='" + country.name + "'>          <div class='country-name'>            国名:..." + country.name + "          </div>          <div class='market-scale'>            市場規模:..." + country.market_scale + "          </div>          <div class='max-price'>            最高値:..." + country.max_price + "          </div>          <div class='buying_price'>            仕入れ値:..." + country.buying_price + "          </div>          <div class='owner'>            本社..." + country.player_name + "          </div>        </div>        ";
+        html = "        <div id='" + country.name + "' class='countries'>          <div class='country-name'>            国名:..." + country.name + "          </div>          <div class='market-scale'>            市場規模:..." + country.market_scale + "          </div>          <div class='max-price'>            最高値:..." + country.max_price + "          </div>          <div class='buying_price'>            仕入れ値:..." + country.buying_price + "          </div>          <div class='owner'>            本社..." + country.player_name + "          </div>        </div>        ";
         return $('#countries').append(html);
       });
     });
     socket.on('update_country', function(data) {
       var country, player_name;
       country = data.country;
-      player_name = data.player_name;
-      return $('#' + ("" + country + " .owner")).html(player_name);
+      player_name = data.name;
+      return $('#' + ("" + country + " .owner")).html("本社..." + player_name);
     });
     socket.on("sample", function(msg) {
       return alert(msg);

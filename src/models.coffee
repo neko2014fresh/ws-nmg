@@ -4,7 +4,7 @@ PlayerSchema = new mongoose.Schema
   name: type: String
   cache: type: Number, default: 30.0
   income: type: Number, default: 0.0
-  player_id: type: Number
+  game_id: type: Number
   country: type: String
   number_of_product: type: Number, default: 0
 

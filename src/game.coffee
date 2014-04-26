@@ -8,6 +8,9 @@ class Game
     'Other'  : 5
     'Idle'   : 6
     'Select' : 7
+  ids: []
+  playerMap = {}
+  socketMap = {}
 
   constructor: (user_id) ->
     @state = @State['Start']
@@ -23,26 +26,36 @@ class Game
 
       socket.on 'save_player_and_country', (data)=>
         player_name = data.player_name
-        country = data.register_country
+        country = data.country
 
         player = new Player()
         player.name = player_name
-        # player.id = GameData.createGameId()
-        # GameData.addId player.id
-        # GameData.registerPlayer "#{player.id}": "#{player.name}"  
+        id = @createGameId()
+        @addIds id
+        player.game_id = id
+        @playerMap['#{id}'] = player_name
+        @socketMap['#{socket.id}'] = id
         player.country = country
 
         player.save (err)->
-          console.log 'success for saving user' unless err
+          console.log 'success for saving user:=>', player unless err
+
+        Country.findOne {'name': country }, (err, c)=>
+          console.log 'country:', c
+          c.player_id = player.game_id
+          c.player_name = player.name
+          c.save (err)=>
+            console.log 'success for saving country', c if err
+
         io.sockets.emit 'update_country', 'country': country, 'name': player_name
 
-      socket.on 'turn:country', (data) =>
-        @state = @State['Select']
-        io.sockets.emit "turn:country_selected", { 'user_id': 0, 'country': 'Thailand', 'clients': '' }
-
       socket.on 'turn:start', (data)=>
+        console.log 'socketMap::', @socketMap
         @state = @State['Start']
-        io.sockets.emit "turn:start_msg", {'turn_owner_id': @current_turn_owner, 'msg': 'カードを引いて下さい'}
+        id = _.first @ids
+        name = @playerMap["#{id}"]
+
+        io.sockets.emit "turn:start_msg", {'turn_owner_name': name}
 
       socket.on 'turn:draw', (data)=>
         console.info "turn:draw"
@@ -79,11 +92,19 @@ class Game
   loop: =>
     @state = @State['IDLE']
 
-  check_turn_and_correct_owner: ()=>
+  check_turn_and_correct_owner: (id)=>
 
+  addIds: (id)=>
+    @ids.push id
 
-  shuffle_owner: =>
-    @current_turn_owner += 1
+  createGameId: =>
+    initial_id = 0
+    id = if @ids.length != 0 then _.last @ids else initial_id
+    id += 1
+
+  rotatePlayer: =>
+    shifted = @ids.shift()
+    @ids.push shifted
 
   cardEvent: =>
     @sockets.on 'card:onDraw', =>

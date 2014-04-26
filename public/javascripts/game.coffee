@@ -50,7 +50,7 @@ $(->
   socket.on 'all_country', (data)=>
     _.map data.countries, (country)->
       html = "
-        <div id='#{country.name}'>
+        <div id='#{country.name}' class='countries'>
           <div class='country-name'>
             国名:...#{country.name}
           </div>
@@ -72,8 +72,8 @@ $(->
 
   socket.on 'update_country', (data) =>
     country = data.country
-    player_name = data.player_name
-    $('#' + "#{country} .owner").html(player_name)
+    player_name = data.name
+    $('#' + "#{country} .owner").html("本社...#{player_name}")
 
   socket.on "sample", (msg)=>
     alert(msg)
