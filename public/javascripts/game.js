@@ -48,9 +48,6 @@
     socket.on('turn:action_selected', function(data) {
       return alert(data.actionType);
     });
-    socket.on("sample", function(msg) {
-      return alert(msg);
-    });
     socket.on("msg:push", function(msg) {
       var date;
       date = new Date();

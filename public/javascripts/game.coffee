@@ -1,5 +1,3 @@
-
-
 $(->
   console.log 'loaded'
 
@@ -41,9 +39,6 @@ $(->
 
   socket.on 'turn:action_selected', (data)->
     alert(data.actionType)
-
-  socket.on "sample", (msg)=>
-    alert(msg)
 
   socket.on "msg:push", (msg)=>
     date = new Date()

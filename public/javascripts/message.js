@@ -14,4 +14,6 @@
     }
   };
 
+  exports.Msg = Msg;
+
 }).call(this);

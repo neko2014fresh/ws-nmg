@@ -1,3 +1,5 @@
+{GameData} = require './game_data'
+
 class Game
   State:
     'Start'  : 0
@@ -10,15 +12,16 @@ class Game
     'Select' : 7
 
   constructor: (user_id) ->
+    console.info 'game...init..'
     @state = @State['Start']
     @current_turn_owner = user_id
 
   start: (io)=>
     io.sockets.on "connection", (socket) =>
 
-      socket.on 'turn:country', (data) =>
+      socket.on 'player:register', (data) =>
         @state = @State['Select']
-        io.sockets.emit "turn:country_selected", { 'user_id': 0, 'country': 'Thailand', 'clients': '' }
+        io.sockets.emit "player:register_end", { 'user_id': 0, 'country': 'Thailand', 'clients': '' }
 
       socket.on 'turn:start', (data)=>
         @state = @State['Start']
