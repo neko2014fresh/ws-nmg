@@ -10,8 +10,8 @@ class Calculator
     # 資産売却
     @asset_sales = args["asset_sales"]
 
-    # 総収入
-    total_sales = @sales + @debt + @investment_sales + @asset_sales
+    # # 総収入
+    # @total_sales = @sales + @debt + @investment_sales + @asset_sales
 
 
     # 商品仕入(原価)
@@ -28,8 +28,8 @@ class Calculator
     # 支払利息
     @interest = args["interest"]
 
-    # 固定費
-    fixed_cost = @labor_expenses + @chip_expenses + @rental_expenses +@interest
+    # # 固定費
+    # @fixed_cost = @labor_expenses + @chip_expenses + @rental_expenses +@interest
 
     # 借入金返済費用
     @back_debt = args["back_debt"]
@@ -38,8 +38,8 @@ class Calculator
     # 固定資産購入費用
     @asset_payment = args["asset_payment"]
 
-    # 総支出
-    total_expenditures = @stock_cost + fixed_cost + @back_debt +@extra_loss +@asset_payment
+    # # 総支出
+    # @total_expenditures = @stock_cost + fixed_cost + @back_debt +@extra_loss +@asset_payment
 
 
     # 商品個数
@@ -66,14 +66,14 @@ class Calculator
     # # 手持ち現金？？
     # @cache = @initial_cache + total_sales - total_expenditures
 
-    # 棚卸(商品価格1.9,固定)
-    inventory = @inventory()
-    # 売上原価（変動費）
-    sales_cost = @stock_cost + @initial_inventory  - inventory
-    # 売上総利益（粗利）
-    margin = @sales - sales_cost
-    # 経常利益（ボード版では出なかった）
-    ordinary_profit = margin - fixed_cost
+    # # 棚卸(商品価格1.9,固定)
+    # @inventory = @inventory()
+    # # 売上原価（変動費）
+    # @sales_cost = @stock_cost + @initial_inventory  - inventory
+    # # 売上総利益（粗利）
+    # @margin = @sales - sales_cost
+    # # 経常利益（ボード版では出なかった）
+    # @ordinary_profit = margin - fixed_cost
     # # 純利益
     # @net_profit = @sales - sales_cost - fixed_cost - @back_debt - @extra_loss - @asset_payment
 
@@ -94,14 +94,37 @@ class Calculator
     @total_equity = capital + @investment_sales + @asset_sales + surplus 
 
 
-  # 手持ち現金計算 (要:ゲーム開始時の手持ち現金)
+  # 総収入計算
+  totalSales: ->
+    total_sales = @sales + @debt + @investment_sales + @asset_sales
+
+  # 固定費計算
+  fixedCost: ->
+    fixed_cost = @labor_expenses + @chip_expenses + @rental_expenses +@interest
+
+  # 総支出計算
+  totalExpenditures: ->
+    total_expenditures = @stock_cost + @fixedCost + @back_debt +@extra_loss +@asset_payment
+
+  # 手持ち現金計算
   currentCache: ->
-    cache = @initial_cache + total_sales - total_expenditures
+    cache = @initial_cache + @totalSales - @totalExpenditures
     # return cache
 
   # 棚卸計算（要：商品換算額 　デフォルト値1.9）
   inventory: (price_product = 1.9)->
-    @inventory = price_product * @number_products
+    inventory = price_product * @number_products
+
+  # 売上原価（変動費）
+  salesCost: ->
+    sales_cost = @stock_cost + @initial_inventory  - @inventory
+  # 売上総利益（粗利）
+  margin :->
+    margin = @sales - @salesCost
+
+  # 経常利益（ボード版では出なかった）
+  ordinaryProfit: ->
+    ordinary_profit = margin - fixed_cost
 
   # 純利益計算
   netProfit: ->
