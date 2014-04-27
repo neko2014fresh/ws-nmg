@@ -58,6 +58,7 @@ class Game
         console.log 'playerMap::', @playerMap
         @current_turn_owner = id
 
+
         io.sockets.emit "turn:setting_msg", { 'player': name }
 
       socket.on 'turn:start', (data)=>
