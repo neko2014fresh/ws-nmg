@@ -8,42 +8,101 @@ class Game
     'Other'  : 5
     'Idle'   : 6
     'Select' : 7
+  ids: []
+  playerMap: {}
+  socketMap: {}
+  current_turn_owner: 0
 
-  constructor: (user_id) ->
+  constructor: ->
     @state = @State['Start']
-    @current_turn_owner = user_id
 
   start: (io)=>
     io.sockets.on "connection", (socket) =>
 
-      socket.on 'turn:country', (data) =>
-        @state = @State['Select']
-        io.sockets.emit "turn:country_selected", { 'user_id': 0, 'country': 'Thailand', 'clients': '' }
+      socket.on 'get_all_country', =>
+        Country.find {}, (err, country)=>
+          params = 'countries': country
+          io.sockets.emit 'all_country', params
+
+      socket.on 'save_player_and_country', (data)=>
+        console.log 'country selected'
+        player_name = data.player_name
+        country = data.country
+
+        player = new Player()
+        player.name = player_name
+        id = @createGameId()
+        @addIds id
+        player.game_id = id
+        @playerMap["#{id}"] = player_name
+        @socketMap["#{id}"] = socket.id
+        player.country = country
+
+        player.save (err)->
+          console.log 'success for saving user' unless err
+
+        Country.findOne {'name': country }, (err, c)=>
+          console.log 'country:', c
+          c.player_id = player.game_id
+          c.player_name = player.name
+          c.save (err)=>
+            console.log 'success for saving country' if err
+
+        io.sockets.emit 'update_country', 'country': country, 'name': player_name
+
+      socket.on 'turn:init_start', (data)=>
+        console.log 'turn:init_start'
+        @state = @State['Start']
+        id = _.first @ids
+        name = @playerMap["#{id}"]
+        console.log 'playerMap::', @playerMap
+        @current_turn_owner = id
+
+        io.sockets.emit "turn:setting_msg", { 'player': name }
 
       socket.on 'turn:start', (data)=>
-        @state = @State['Start']
-        io.sockets.emit "turn:start_msg", {'turn_owner_id': @current_turn_owner, 'msg': 'カードを引いて下さい'}
+        console.log 'turn:start'
+        # console.log 'turn_owner...', @current_turn_owner
+        # console.log 'socket_id....', socket.id
+        # console.log 'socketMap...', @socketMap
+        if @validate_turn_and_player @current_turn_owner, socket
+          io.sockets.emit 'warn:not_your_turn'
+          return
+        name = @playerMap["#{@current_turn_owner}"]
+
+        io.sockets.emit 'turn:starg_msg', { 'name': name }
 
       socket.on 'turn:draw', (data)=>
         console.info "turn:draw"
         @state = @State['Draw']
-        io.sockets.emit "turn:draw_end", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner, 'cardType': 'normal card'}
+        if @validate_turn_and_player @current_turn_owner, socket
+          console.log 'io.sockets.emit'
+          console.log 'socket-id:::', socket.id
+          console.log 'socketMap:::', @socketMap
+          io.sockets.socket(socket.id).emit 'warn:not_your_turn'
+          return
+
+        io.sockets.emit "turn:draw_end", {'turn_owner_name': @playerMap["#{@current_turn_owner}"], 'cardType': 'normal card'}
 
       socket.on 'turn:action', (data)=>
-        # return unless @state is State['Draw'] 
+        # return unless @state is State['Draw']
         @state = @State['Action']
         # action_type = data.actionType
         io.sockets.emit "turn:action_selected", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner, 'actionType': 'sell to Thailand'}
 
       socket.on 'turn:bet', (data)=>
-        # return unless @state is State['Draw'] 
+        # return unless @state is State['Draw']
         @state = @State['Bet']
         io.sockets.emit "turn:bet_end", {'turn_owner_id': @current_turn_owner, 'turn_owner_name': @current_turn_owner}
 
       socket.on 'turn:finish', (data)=>
-        # return unless @state is State['Draw'] 
+        # return unless @state is State['Draw']
         @state = @State['Finish']
-        @shuffle_owner()
+        @rotatePlayer()
+        id = @getTurnPlayer()
+        console.log 'player::', @playerMap
+        console.log 'player::', @playerMap["#{id}"]
+        io.sockets.emit "turn:finished", {"player_name": @playerMap["#{id}"]}
 
       socket.on 'turn:other', (data)=>
         @state = @state['Other']
@@ -59,8 +118,24 @@ class Game
   loop: =>
     @state = @State['IDLE']
 
-  shuffle_owner: =>
-    @current_turn_owner += 1
+  validate_turn_and_player: (player_id, socket)=>
+    return true unless @socketMap["#{player_id}"] is socket.id
+
+  addIds: (id)=>
+    @ids.push id
+    console.log 'addIds:::', @ids
+
+  getTurnPlayer: =>
+    _.first @ids
+
+  createGameId: =>
+    initial_id = 0
+    id = if @ids.length != 0 then _.last @ids else initial_id
+    id += 1
+
+  rotatePlayer: =>
+    shifted = @ids.shift()
+    @ids.push shifted
 
   cardEvent: =>
     @sockets.on 'card:onDraw', =>

@@ -20,3 +20,5 @@ Countries =
       'max_price': 5.0
       'buying_price': 1.5
   ]
+
+exports.Countries = Countries

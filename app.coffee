@@ -13,6 +13,7 @@ GLOBAL._  = require 'underscore'
 GLOBAL._.str = require 'underscore.string'
 mongoose  = require 'mongoose'
 {Game}    = require('./src/game')
+{Countries} = require './config/country_seed'
 app       = express()
 
 mongoose.connect "mongodb://127.0.0.1/ws-nmg", (error) ->
@@ -36,6 +37,15 @@ GLOBAL.Player  = app.settings.models.Player
 GLOBAL.Country = app.settings.models.Country
 GLOBAL.Product = app.settings.models.Product
 
+_.map Countries, (sc)->
+  country = new Country()
+  country.name = sc.name
+  country.market_scale = sc.market_scale
+  country.max_price = sc.max_price
+  country.buying_price = sc.buying_price
+  country.save (err)->
+    console.info 'err'
+
 # development only
 app.use express.errorHandler()  if "development" is app.get("env")
 
@@ -44,17 +54,17 @@ app.get "/", routes.index
 app.get "/users", user.list
 app.get "/register", register.register
 
+#registration
 app.post '/finish_register', (req, res)->
   player_name = req.body.player_name
   country = req.body.counrty
 
   player = new Player()
   player.name = player_name
-  player.cache = 30.0
-  player.income = 0.0
-  player.id = 0
+  # player.id = GameData.createGameId()
+  # GameData.addId(player.id)
+  # GameData.registerPlayer {"#{player.id}": "#{player.name}"}
   player.country = country
-  player.number_of_product = 0
 
   console.log 'player:', player
 
@@ -68,17 +78,23 @@ app.post '/sample_register', (req, res)->
   country = req.body.counrty
 
   player = new Player()
+  player.name = player_name
+  # player.id = GameData.createGameId()
+  # GameData.addId(player.id)
+  # GameData.registerPlayer "#{player.id}": "#{player.name}"
+  player.country = country
+
+  player.save (err)->
+    console.log 'success for saving user' unless err
 
 server = http.createServer app
 
 server.listen(app.get('port'))
-server_io = io.listen server
+server_io = io.listen server, { log: false }
 
 server_io.set('close timeout', 60)
 server_io.set('heartbeat timeout', 60)
 
-user_id = 0
-
-game = new Game user_id
+game = new Game
 game.start server_io
 
