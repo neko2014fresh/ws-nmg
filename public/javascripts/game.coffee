@@ -92,6 +92,9 @@ $(->
   socket.on "warn:already_init", (msg)=>
     alert('もう登録しとるやろ！')
 
+  socket.on "warn:already_draw", (msg)=>
+    alert('もう引いとるやろ！')
+
   socket.on "turn:finished", (data)=>
     alert("ターン終了。次は#{data.player_name}のターンです")
 

@@ -91,13 +91,13 @@ class Game
           io.sockets.socket(socket.id).emit 'warn:not_your_turn'
           return
 
+        io.sockets(socket.id).emit('warn:already_draw') unless @cardStatus is ''
         card = Card.draw()
         @cardStatus = card
         io.sockets.emit "turn:draw_end", {'player': @playerMap["#{@current_turn_owner}"], 'cardType': card}
 
       socket.on 'turn:action', (data)=>
         @state = @State['Action']
-
         actionType = data.actionType
         @actionStatus = actionType
 

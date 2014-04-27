@@ -81,6 +81,9 @@
     socket.on("warn:already_init", function(msg) {
       return alert('もう登録しとるやろ！');
     });
+    socket.on("warn:already_draw", function(msg) {
+      return alert('もう引いとるやろ！');
+    });
     socket.on("turn:finished", function(data) {
       return alert("ターン終了。次は" + data.player_name + "のターンです");
     });
