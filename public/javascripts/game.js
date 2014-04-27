@@ -55,7 +55,7 @@
     });
     socket.on('turn:draw_end', function(data) {
       console.info("draw_end");
-      return alert(data.cardType);
+      return alert("" + data.player + "が" + cardType + "を引きました");
     });
     socket.on('turn:action_selected', function(data) {
       return alert(data.actionType);

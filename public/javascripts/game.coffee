@@ -1,5 +1,3 @@
-
-
 $(->
   console.log 'loaded'
 
@@ -49,7 +47,7 @@ $(->
 
   socket.on 'turn:draw_end', (data)->
     console.info "draw_end"
-    alert(data.cardType)
+    alert("#{data.player}が#{cardType}を引きました")
 
   socket.on 'turn:action_selected', (data)->
     alert(data.actionType)
