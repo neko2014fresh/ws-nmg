@@ -14,7 +14,7 @@ $(->
   socket.emit('get_all_country')
 
   $('#register-country-btn').on 'click', ->
-    player_name = $('#player-name').val()
+    player_name = if $('#player-name').val() is "" then "小保方晴子" else $('#player-name').val()
     register_country = $('#register-country').val()
     socket.emit "save_player_and_country", 'player_name': player_name, 'country': register_country
 
@@ -35,11 +35,17 @@ $(->
     action_type = $('#action-type').val()
     socket.emit 'turn:action', {'actionType': action_type}
 
+  $('#turn_end').on 'click', ->
+    socket.emit 'turn:finish'
+
   socket.on 'turn:country_selected', (data)->
     alert("#{data.user_id}が#{data.country}を選びました")
 
-  socket.on 'turn:start_msg', (data)->
-    alert("#{current_turn_owner}のターンです")
+  socket.on 'turn:setting_msg', (data)->
+    alert("#{data.player}の初期設定が終わりました")
+
+  socket.on "turn:start_msg", (data)->
+    alert("#{data.name}のターンです")
 
   socket.on 'turn:draw_end', (data)->
     console.info "draw_end"
@@ -77,8 +83,12 @@ $(->
     player_name = data.name
     $('#' + "#{country} .owner").html("本社...#{player_name}")
 
-  socket.on "sample", (msg)=>
-    alert(msg)
+  socket.on "warn:not_your_turn", (msg)=>
+    alert('おめえのターンじゃねぇから！')
+
+  socket.on "turn:finished", (data)=>
+    debugger
+    alert("ターン終了。次は#{data.player_name}のターンです")
 
   socket.on "msg:push", (msg)=>
     date = new Date()

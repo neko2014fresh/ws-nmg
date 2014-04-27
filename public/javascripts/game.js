@@ -14,7 +14,7 @@
     socket.emit('get_all_country');
     $('#register-country-btn').on('click', function() {
       var player_name, register_country;
-      player_name = $('#player-name').val();
+      player_name = $('#player-name').val() === "" ? "小保方晴子" : $('#player-name').val();
       register_country = $('#register-country').val();
       return socket.emit("save_player_and_country", {
         'player_name': player_name,
@@ -41,11 +41,17 @@
         'actionType': action_type
       });
     });
+    $('#turn_end').on('click', function() {
+      return socket.emit('turn:finish');
+    });
     socket.on('turn:country_selected', function(data) {
       return alert("" + data.user_id + "が" + data.country + "を選びました");
     });
-    socket.on('turn:start_msg', function(data) {
-      return alert("" + current_turn_owner + "のターンです");
+    socket.on('turn:setting_msg', function(data) {
+      return alert("" + data.player + "の初期設定が終わりました");
+    });
+    socket.on("turn:start_msg", function(data) {
+      return alert("" + data.name + "のターンです");
     });
     socket.on('turn:draw_end', function(data) {
       console.info("draw_end");
@@ -69,8 +75,12 @@
       player_name = data.name;
       return $('#' + ("" + country + " .owner")).html("本社..." + player_name);
     });
-    socket.on("sample", function(msg) {
-      return alert(msg);
+    socket.on("warn:not_your_turn", function(msg) {
+      return alert('おめえのターンじゃねぇから！');
+    });
+    socket.on("turn:finished", function(data) {
+      debugger;
+      return alert("ターン終了。次は" + data.player_name + "のターンです");
     });
     socket.on("msg:push", function(msg) {
       var date;
