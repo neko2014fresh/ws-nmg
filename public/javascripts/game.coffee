@@ -11,9 +11,15 @@ $(->
     console.info 'check update'
   , 1000
 
-  $('#select-country-btn').on 'click', ->
-    country = $('#select-country').val()
-    socket.emit('turn:country', {'country': country})
+  socket.emit('get_all_country')
+
+  $('#register-country-btn').on 'click', ->
+    player_name = if $('#player-name').val() is "" then "小保方晴子" else $('#player-name').val()
+    register_country = $('#register-country').val()
+    socket.emit "save_player_and_country", 'player_name': player_name, 'country': register_country
+
+  $('#init-start').on 'click', ->
+    socket.emit('turn:init_start')
 
   $('#start').on 'click', ->
     socket.emit('turn:start')
@@ -29,11 +35,17 @@ $(->
     action_type = $('#action-type').val()
     socket.emit 'turn:action', {'actionType': action_type}
 
+  $('#turn_end').on 'click', ->
+    socket.emit 'turn:finish'
+
   socket.on 'turn:country_selected', (data)->
     alert("#{data.user_id}が#{data.country}を選びました")
 
-  socket.on 'turn:start_msg', (data)->
-    alert(data.msg)
+  socket.on 'turn:setting_msg', (data)->
+    alert("#{data.player}の初期設定が終わりました")
+
+  socket.on "turn:start_msg", (data)->
+    alert("#{data.name}のターンです")
 
   socket.on 'turn:draw_end', (data)->
     console.info "draw_end"
@@ -42,8 +54,41 @@ $(->
   socket.on 'turn:action_selected', (data)->
     alert(data.actionType)
 
-  socket.on "sample", (msg)=>
-    alert(msg)
+  socket.on 'all_country', (data)=>
+    if $('#countries').children().length == 0
+      _.map data.countries, (country)=>
+        html = "
+          <div id='#{country.name}' class='countries'>
+            <div class='country-name'>
+              国名:...#{country.name}
+            </div>
+            <div class='market-scale'>
+              市場規模:...#{country.market_scale}
+            </div>
+            <div class='max-price'>
+              最高値:...#{country.max_price}
+            </div>
+            <div class='buying_price'>
+              仕入れ値:...#{country.buying_price}
+            </div>
+            <div class='owner'>
+              本社...#{country.player_name}
+            </div>
+          </div>
+          "
+        $('#countries').append(html)
+
+  socket.on 'update_country', (data) =>
+    country = data.country
+    player_name = data.name
+    $('#' + "#{country} .owner").html("本社...#{player_name}")
+
+  socket.on "warn:not_your_turn", (msg)=>
+    alert('おめえのターンじゃねぇから！')
+
+  socket.on "turn:finished", (data)=>
+    debugger
+    alert("ターン終了。次は#{data.player_name}のターンです")
 
   socket.on "msg:push", (msg)=>
     date = new Date()
