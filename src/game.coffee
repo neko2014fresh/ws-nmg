@@ -91,7 +91,7 @@ class Game
           io.sockets.socket(socket.id).emit 'warn:not_your_turn'
           return
 
-        io.sockets(socket.id).emit('warn:already_draw') unless @cardStatus is ''
+        io.sockets.socket(socket.id).emit('warn:already_draw') unless @cardStatus is ''
         card = Card.draw()
         @cardStatus = card
         io.sockets.emit "turn:draw_end", {'player': @playerMap["#{@current_turn_owner}"], 'cardType': card}
@@ -129,6 +129,11 @@ class Game
       socket.on 'turn:other', (data)=>
         @state = @state['Other']
         @otherEvent()
+
+      socket.on 'chat:on', (data)=>
+        msg = data.msg
+        console.log 'msg:::', msg
+        io.sockets.emit "chat:send", "msg": msg
 
       socket.on 'turn:sample', (data)=>
         socket.emit "sample", "sample"
