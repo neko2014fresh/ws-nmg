@@ -44,18 +44,25 @@
     $('#turn_end').on('click', function() {
       return socket.emit('turn:finish');
     });
+    $('#chat-button').on('click', function() {
+      var chat;
+      chat = $("#chat-msg").val();
+      return socket.emit('chat:on', {
+        "msg": chat
+      });
+    });
     socket.on('turn:country_selected', function(data) {
-      return alert("" + data.user_id + "が" + data.country + "を選びました");
+      return alert("" + data.user_id + "が" + data.country + "を選びました。");
     });
     socket.on('turn:setting_msg', function(data) {
-      return alert("" + data.player + "の初期設定が終わりました");
+      return alert("" + data.player + "の初期設定が終わりました。");
     });
     socket.on("turn:start_msg", function(data) {
-      return alert("" + data.name + "のターンです");
+      return alert("" + data.name + "のターンです。");
     });
     socket.on('turn:draw_end', function(data) {
       console.info("draw_end");
-      return alert(data.cardType);
+      return alert("" + data.player + "が" + cardType + "を引きました。" + data.player + "は行動を選択して下さい");
     });
     socket.on('turn:action_selected', function(data) {
       return alert(data.actionType);
@@ -64,12 +71,12 @@
       if ($('#countries').children().length === 0) {
         return _.map(data.countries, function(country) {
           var html;
-          html = "          <div id='" + country.name + "' class='countries'>            <div class='country-name'>              国名:..." + country.name + "            </div>            <div class='market-scale'>              市場規模:..." + country.market_scale + "            </div>            <div class='max-price'>              最高値:..." + country.max_price + "            </div>            <div class='buying_price'>              仕入れ値:..." + country.buying_price + "            </div>            <div class='owner'>              本社..." + country.player_name + "            </div>          </div>          ";
+          html = "          <br>          <div id='" + country.name + "' class='countries'>            <div class='country-name'>              国名:..." + country.name + "            </div>            <div class='market-scale'>              市場規模:..." + country.market_scale + "            </div>            <div class='market-rest'>              市場猶予:..." + country.market_rest + "            </div>            <div class='max-price'>              最高値:..." + country.max_price + "            </div>            <div class='buying_price'>              仕入れ値:..." + country.buying_price + "            </div>            <div class='owner'>              本社..." + country.player_name + "            </div>          </div>          <br>          ";
           return $('#countries').append(html);
         });
       }
     });
-    socket.on('update_country', function(data) {
+    socket.on('update_country_owner_name', function(data) {
       var country, player_name;
       country = data.country;
       player_name = data.name;
@@ -78,8 +85,18 @@
     socket.on("warn:not_your_turn", function(msg) {
       return alert('おめえのターンじゃねぇから！');
     });
+    socket.on("chat:send", function(data) {
+      var html;
+      html = "      <div class='msg-sender'>        " + data.msg + "      </div>    ";
+      return $("#chat-area").append(html);
+    });
+    socket.on("warn:already_init", function(msg) {
+      return alert('もう登録しとるやろ！');
+    });
+    socket.on("warn:already_draw", function(msg) {
+      return alert('もう引いとるやろ！');
+    });
     socket.on("turn:finished", function(data) {
-      debugger;
       return alert("ターン終了。次は" + data.player_name + "のターンです");
     });
     socket.on("msg:push", function(msg) {

@@ -1,5 +1,3 @@
-
-
 $(->
   console.log 'loaded'
 
@@ -38,18 +36,22 @@ $(->
   $('#turn_end').on 'click', ->
     socket.emit 'turn:finish'
 
+  $('#chat-button').on 'click', ->
+    chat = $("#chat-msg").val()
+    socket.emit 'chat:on', "msg": chat
+
   socket.on 'turn:country_selected', (data)->
-    alert("#{data.user_id}が#{data.country}を選びました")
+    alert("#{data.user_id}が#{data.country}を選びました。")
 
   socket.on 'turn:setting_msg', (data)->
-    alert("#{data.player}の初期設定が終わりました")
+    alert("#{data.player}の初期設定が終わりました。")
 
   socket.on "turn:start_msg", (data)->
-    alert("#{data.name}のターンです")
+    alert("#{data.name}のターンです。")
 
   socket.on 'turn:draw_end', (data)->
     console.info "draw_end"
-    alert(data.cardType)
+    alert("#{data.player}が#{cardType}を引きました。#{data.player}は行動を選択して下さい")
 
   socket.on 'turn:action_selected', (data)->
     alert(data.actionType)
@@ -58,12 +60,16 @@ $(->
     if $('#countries').children().length == 0
       _.map data.countries, (country)=>
         html = "
+          <br>
           <div id='#{country.name}' class='countries'>
             <div class='country-name'>
               国名:...#{country.name}
             </div>
             <div class='market-scale'>
               市場規模:...#{country.market_scale}
+            </div>
+            <div class='market-rest'>
+              市場猶予:...#{country.market_rest}
             </div>
             <div class='max-price'>
               最高値:...#{country.max_price}
@@ -75,10 +81,11 @@ $(->
               本社...#{country.player_name}
             </div>
           </div>
+          <br>
           "
         $('#countries').append(html)
 
-  socket.on 'update_country', (data) =>
+  socket.on 'update_country_owner_name', (data) =>
     country = data.country
     player_name = data.name
     $('#' + "#{country} .owner").html("本社...#{player_name}")
@@ -86,8 +93,21 @@ $(->
   socket.on "warn:not_your_turn", (msg)=>
     alert('おめえのターンじゃねぇから！')
 
+  socket.on "chat:send", (data)=>
+    html = "
+      <div class='msg-sender'>
+        #{data.msg}
+      </div>
+    "
+    $("#chat-area").append(html)
+
+  socket.on "warn:already_init", (msg)=>
+    alert('もう登録しとるやろ！')
+
+  socket.on "warn:already_draw", (msg)=>
+    alert('もう引いとるやろ！')
+
   socket.on "turn:finished", (data)=>
-    debugger
     alert("ターン終了。次は#{data.player_name}のターンです")
 
   socket.on "msg:push", (msg)=>
