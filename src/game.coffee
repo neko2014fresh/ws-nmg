@@ -56,6 +56,7 @@ class Game
             console.log 'success for saving country' if err
 
         io.sockets.emit 'update_country_owner_name', 'country': country, 'name': player_name
+        io.sockets.socket(socket.id).emit 'initial_player_status', 'country': country, 'name': player_name, 'cache': player.cache, 'income': player.income, 'product': player.number_of_product
 
       socket.on 'turn:init_start', (data)=>
         console.log 'turn:init_start'
@@ -71,9 +72,6 @@ class Game
 
       socket.on 'turn:start', (data)=>
         console.log 'turn:start'
-        # console.log 'turn_owner...', @current_turn_owner
-        # console.log 'socket_id....', socket.id
-        # console.log 'socketMap...', @socketMap
         if @validate_turn_and_player @current_turn_owner, socket
           io.sockets.socket(socket.id).emit 'warn:not_your_turn'
           return
@@ -94,22 +92,74 @@ class Game
         io.sockets.socket(socket.id).emit('warn:already_draw') unless @cardStatus is ''
         card = Card.draw()
         @cardStatus = card
-        io.sockets.emit "turn:draw_end", {'player': @playerMap["#{@current_turn_owner}"], 'cardType': card}
+        io.sockets.emit "turn:draw_end", { 'player': @playerMap["#{@current_turn_owner}"], 'cardType': card }
 
       socket.on 'turn:action', (data)=>
         @state = @State['Action']
         actionType = data.actionType
         @actionStatus = actionType
 
-        switch actionType
-          when 'buying'
-            console.log 'cardを引いて下さい'
-          when 'sell'
-            console.log '売って下さい'
-          when 'create_product'
-            console.log '製造します'
+        # switch actionType
+        #   when 'buy'
+        #     console.log 'cardを引いて下さい'
+        #   when 'sell'
+        #     console.log '売って下さい'
+        #   when 'create_product'
+        #     console.log '製造します'
 
-        io.sockets.emit "turn:action_selected", {'turn_owner_name': @current_turn_owner, 'actionType': 'sell to Thailand'}
+        console.log 'turn:action'
+
+        io.sockets.socket(socket.id).emit "turn:action_selected", {"action": actionType}
+
+      socket.on 'turn:buy', (data)=>
+        console.log 'buying'
+        country = data.country
+        amount = data.amount
+        price = 0
+
+        # should have instance method
+        Country.findOne {'name': counrty}, (err, c)=>
+          c.market_rest += amount
+          price = c.buying_price
+          if c.market_rest > c.market_scale
+            io.socket.socket(socket.id).emit 'warn:cant_buy_from_country'
+            return
+          c.save (err) ->
+            console.log err if err
+
+        # should have instance method
+        player_name = @playerMap["#{@current_turn_owner}"]
+        Player.findOne 'name': player_name, (err, p)=>
+          p.number_of_product += amount
+          expenditure = (price * amount)
+          p.cache -= expenditure
+          p.save (err) ->
+            console.log err
+
+
+      socket.on 'turn:sell', (data)=>
+        console.log 'sell'
+        country = data.country
+        amount = data.amount
+        price = 0
+        should have instance method
+        Country.findOne 'name': counrty, (err, c)=>
+          c.market_rest = c.market_rest - amount
+          price = c.max_price
+          if c.market_rest < 0
+            io.socket.socket(socket.id).emit 'warn:cant_sell_to_country'
+            return
+          c.save (err) ->
+            console.log err if err
+
+        # should have instance method
+        player_name = @playerMap["#{@current_turn_owner}"]
+        Player.findOne 'name': player_name, (err, p)=>
+          tmp_income = (price * amount)
+          p.cache += tmp_income
+          p.number_of_product += amount
+          p.save (err) ->
+            console.log err
 
       socket.on 'turn:bet', (data)=>
         # return unless @state is State['Draw']

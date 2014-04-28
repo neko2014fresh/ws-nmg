@@ -65,7 +65,14 @@
       return alert("" + data.player + "が" + cardType + "を引きました。" + data.player + "は行動を選択して下さい");
     });
     socket.on('turn:action_selected', function(data) {
-      return alert(data.actionType);
+      var actionType, amount, targetCountry;
+      actionType = data.action;
+      targetCountry = $('#target-country').val();
+      amount = $('#amount').val();
+      return socket.emit("turn:" + actionType, {
+        'country': targetCountry,
+        'amount': amount
+      });
     });
     socket.on('all_country', function(data) {
       if ($('#countries').children().length === 0) {
@@ -81,6 +88,11 @@
       country = data.country;
       player_name = data.name;
       return $('#' + ("" + country + " .owner")).html("本社..." + player_name);
+    });
+    socket.on('initial_player_status', function(data) {
+      var html;
+      html = "      <div class='name'>        名前:" + data.name + "      </div>      <div class='country'>        国:" + data.country + "      </div>      <div class='cache'>        キャッシュ:" + data.cache + "      </div>      <div class='income'>        純利益:" + data.income + "      </div>      <div class='number-of-product'>        製品数:" + data.product + "      </div>    ";
+      return $('#player-status').append(html);
     });
     socket.on("warn:not_your_turn", function(msg) {
       return alert('おめえのターンじゃねぇから！');

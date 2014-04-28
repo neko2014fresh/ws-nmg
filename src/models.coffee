@@ -23,6 +23,10 @@ CountrySchema = new mongoose.Schema
 GameDataSchema = new mongoose.Schema
   player_ids: type: [], values: [Number]
 
+ChatSchema = new mongoose.Schema
+  sender: type: String
+  message: type: String
+
 url = 'mongodb://127.0.0.1/ws-nmg'
 
 db = mongoose.createConnection url, (err, res)->
@@ -32,3 +36,4 @@ exports.Player  = db.model 'Player', PlayerSchema
 exports.Product = db.model 'Product', ProductSchema
 exports.Country = db.model 'Country', CountrySchema
 exports.GameData = db.model 'GameData', GameDataSchema
+exports.ChatSchema = db.model 'Chat', ChatSchema

@@ -11,8 +11,8 @@ path      = require("path")
 io        = require 'socket.io'
 GLOBAL._  = require 'underscore'
 GLOBAL._.str = require 'underscore.string'
-mongoose  = require 'mongoose'
 GLOBAL.Card = require('./src/card').Card
+mongoose  = require 'mongoose'
 {Game}    = require('./src/game')
 {Countries} = require './config/country_seed'
 app       = express()
@@ -38,6 +38,7 @@ app.use express.static(path.join(__dirname, "public"))
 GLOBAL.Player  = app.settings.models.Player
 GLOBAL.Country = app.settings.models.Country
 GLOBAL.Product = app.settings.models.Product
+GLOBAL.Chat    = app.settings.models.Chat
 
 _.map Countries, (sc)->
   country = new Country()

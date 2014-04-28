@@ -53,8 +53,11 @@ $(->
     console.info "draw_end"
     alert("#{data.player}が#{cardType}を引きました。#{data.player}は行動を選択して下さい")
 
-  socket.on 'turn:action_selected', (data)->
-    alert(data.actionType)
+  socket.on 'turn:action_selected', (data)=>
+    actionType = data.action
+    targetCountry = $('#target-country').val()
+    amount = $('#amount').val()
+    socket.emit "turn:#{actionType}", 'country': targetCountry, 'amount': amount
 
   socket.on 'all_country', (data)=>
     if $('#countries').children().length == 0
@@ -89,6 +92,26 @@ $(->
     country = data.country
     player_name = data.name
     $('#' + "#{country} .owner").html("本社...#{player_name}")
+
+  socket.on 'initial_player_status', (data)=>
+    html = "
+      <div class='name'>
+        名前:#{data.name}
+      </div>
+      <div class='country'>
+        国:#{data.country}
+      </div>
+      <div class='cache'>
+        キャッシュ:#{data.cache}
+      </div>
+      <div class='income'>
+        純利益:#{data.income}
+      </div>
+      <div class='number-of-product'>
+        製品数:#{data.product}
+      </div>
+    "
+    $('#player-status').append(html)
 
   socket.on "warn:not_your_turn", (msg)=>
     alert('おめえのターンじゃねぇから！')
