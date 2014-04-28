@@ -64,3 +64,4 @@ exports.Player  = db.model 'Player', PlayerSchema
 exports.Product = db.model 'Product', ProductSchema
 exports.Country = db.model 'Country', CountrySchema
 exports.GameData = db.model 'GameData', GameDataSchema
+exports.Calculator = db.model 'Calculator', CalculatorSchema
