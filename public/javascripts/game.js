@@ -44,18 +44,25 @@
     $('#turn_end').on('click', function() {
       return socket.emit('turn:finish');
     });
+    $('#chat-button').on('click', function() {
+      var chat;
+      chat = $("#chat-msg").val();
+      return socket.emit('chat:on', {
+        "msg": chat
+      });
+    });
     socket.on('turn:country_selected', function(data) {
-      return alert("" + data.user_id + "が" + data.country + "を選びました");
+      return alert("" + data.user_id + "が" + data.country + "を選びました。");
     });
     socket.on('turn:setting_msg', function(data) {
-      return alert("" + data.player + "の初期設定が終わりました");
+      return alert("" + data.player + "の初期設定が終わりました。");
     });
     socket.on("turn:start_msg", function(data) {
-      return alert("" + data.name + "のターンです");
+      return alert("" + data.name + "のターンです。");
     });
     socket.on('turn:draw_end', function(data) {
       console.info("draw_end");
-      return alert("" + data.player + "が" + cardType + "を引きました");
+      return alert("" + data.player + "が" + cardType + "を引きました。" + data.player + "は行動を選択して下さい");
     });
     socket.on('turn:action_selected', function(data) {
       return alert(data.actionType);
@@ -77,6 +84,11 @@
     });
     socket.on("warn:not_your_turn", function(msg) {
       return alert('おめえのターンじゃねぇから！');
+    });
+    socket.on("chat:send", function(data) {
+      var html;
+      html = "      <div class='msg-sender'>        " + data.msg + "      </div>    ";
+      return $("#chat-area").append(html);
     });
     socket.on("warn:already_init", function(msg) {
       return alert('もう登録しとるやろ！');

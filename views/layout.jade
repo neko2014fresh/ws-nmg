@@ -9,6 +9,7 @@ html
     script(src='/javascripts/game.js')
   body
     header(id='player-status')
+
     label(for="player-name") player name
     br
     input(type="text", name="player-name", id="player-name")
@@ -34,18 +35,26 @@ html
     button(id="turn_start") turn start
     br
     br
+    label(for="target-country") target-country
+    br
+    select(id="target-country", name="action")
+        option(value='Thailand') thailand
+        option(value='Vietnum') vietnum
+        option(value='Singapore') Singapore
+        option(value='Malaysia') Malaysia
+    br
+    label(for="amount") Amount
+    br
+    input(type="text", name="amount", id="amount")
+    br
     label(for="action-type") select-actions
+    br
     select(id="action-type", name="action")
         option(value='buy') buy
         option(value='sell') sell
         option(value='create_product') create_product
     br
     br
-    label(for="target-country") target-country
-    select(id="target-country", name="action")
-        option(value='vietnum') vietnum
-        option(value='thailand') thailand
-        option(value='indnesia') indnesia
     button(id="action-btn") Send Action
     br
     br
@@ -54,3 +63,10 @@ html
     button(id="bet-money-btn", name="bet-money-btn") bet-money
     button(id="turn_end") turn end
     div(id="current-notification")
+
+    label(for="chat") チャット
+    br
+    input(type="text", name="chat", id="chat-msg")
+    button(id="chat-button") 送信
+    br
+    div(id="chat-area")
