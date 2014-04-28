@@ -12,6 +12,7 @@ io        = require 'socket.io'
 GLOBAL._  = require 'underscore'
 GLOBAL._.str = require 'underscore.string'
 mongoose  = require 'mongoose'
+GLOBAL.Card = require('./src/card').Card
 {Game}    = require('./src/game')
 {Countries} = require './config/country_seed'
 app       = express()

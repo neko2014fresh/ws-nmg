@@ -8,6 +8,7 @@ html
     script(src='/socket.io/socket.io.js')
     script(src='/javascripts/game.js')
   body
+    header(id='player-status')
     label(for="player-name") player name
     br
     input(type="text", name="player-name", id="player-name")
@@ -20,7 +21,6 @@ html
         option(value='Malaysia') Malaysia
     br
     button(id="register-country-btn") decide
-
     br
     br
     div(id="countries")
@@ -32,7 +32,6 @@ html
     button(id="start") start
     button(id="draw_card") draw card
     button(id="turn_start") turn start
-    button(id="sample") sample
     br
     br
     label(for="action-type") select-actions
