@@ -5,34 +5,46 @@ html
     link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
     link(rel='stylesheet', href='/bootstrap/css/bootstrap-responsive.min.css') 
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/style.styl')
     script(src='http://code.jquery.com/jquery-2.1.0.min.js')
     script(src='http://underscorejs.org/underscore-min.js')
     script(src='/socket.io/socket.io.js')
     script(src='/javascripts/game.js')
     script(src='/bootstrap/js/bootstrap.min.js')
+
+  body
+    header.navbar.navbar-fixed-top.navbar-inverse
+      div.navbar-inner
+        div.container
+          nav
+            ul.nav.navbar-nav.pull-left
+              li
+                h1 NMG
+            ul.nav.navbar-nav.pull-right
+              li
+                h4 player name
+                label(for="player-name")
+                input(type="text", name="player-name", id="player-name", class="span8")
+              li
+                select(id="register-country", name="register-country")
+                    option(value='Thailand') thailand
+                    option(value='Vietnum') vietnum
+                    option(value='Singapore') Singapore
+                    option(value='Malaysia') Malaysia
+                br
+                .btn-group
+                  button.btn(id="register-country-btn") decide
+                  button.btn(id="init-start") init:start
+  body
   body
     header(id='player-status')
-
-    label(for="player-name") player name
-    br
-    input(type="text", name="player-name", id="player-name", class="span8")
-    br
-    br
-    select(id="register-country", name="register-country")
-        option(value='Thailand') thailand
-        option(value='Vietnum') vietnum
-        option(value='Singapore') Singapore
-        option(value='Malaysia') Malaysia
-    br
-    button(id="register-country-btn") decide
-    br
     br
     div(id="countries")
     br
     br
     br
+    //- 登録：init-start
     input(type="text", name="message", id="message")
-    button(id="init-start") init:start
     button(id="start") start
     button(id="draw_card") draw card
     button(id="turn_start") turn start
@@ -40,6 +52,7 @@ html
     br
     label(for="target-country") target-country
     br
+    //- 購入部分
     select(id="target-country", name="action")
         option(value='Thailand') thailand
         option(value='Vietnum') vietnum
@@ -52,6 +65,7 @@ html
     br
     label(for="action-type") select-actions
     br
+    //- 行動選択
     select(id="action-type", name="action")
         option(value='buy') buy
         option(value='sell') sell
@@ -67,6 +81,7 @@ html
     button(id="turn_end") turn end
     div(id="current-notification")
 
+    //- チャット▶︎別枠を作成
     label(for="chat") チャット
     br
     input(type="text", name="chat", id="chat-msg")
