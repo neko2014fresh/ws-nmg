@@ -26,6 +26,12 @@ class Game
           params = 'countries': country
           io.sockets.emit 'all_country', params
 
+      socket.on 'get_all_chat', =>
+        Chat.find {}, (err, chat)=>
+          params = 'chats': chat
+          console.log 'chat::obj', params
+          io.sockets.emit 'all_chat', params
+
       socket.on 'save_player_and_country', (data)=>
         console.log 'country selected'
         player_name = data.player_name
@@ -48,14 +54,18 @@ class Game
         player.save (err)->
           console.log 'success for saving user' unless err
 
+        console.log 'country-name:', country
         Country.findOne {'name': country }, (err, c)=>
+          console.log 'err:', err
           console.log 'country:', c
+          console.log 'player::', player
           c.player_id = player.game_id
           c.player_name = player.name
           c.save (err)=>
             console.log 'success for saving country' if err
 
         io.sockets.emit 'update_country_owner_name', 'country': country, 'name': player_name
+        io.sockets.socket(socket.id).emit 'initial_player_status', 'country': country, 'name': player_name, 'cash': player.cash, 'income': player.income, 'product': player.number_of_product
 
       socket.on 'turn:init_start', (data)=>
         console.log 'turn:init_start'
@@ -71,9 +81,6 @@ class Game
 
       socket.on 'turn:start', (data)=>
         console.log 'turn:start'
-        # console.log 'turn_owner...', @current_turn_owner
-        # console.log 'socket_id....', socket.id
-        # console.log 'socketMap...', @socketMap
         if @validate_turn_and_player @current_turn_owner, socket
           io.sockets.socket(socket.id).emit 'warn:not_your_turn'
           return
@@ -94,22 +101,97 @@ class Game
         io.sockets.socket(socket.id).emit('warn:already_draw') unless @cardStatus is ''
         card = Card.draw()
         @cardStatus = card
-        io.sockets.emit "turn:draw_end", {'player': @playerMap["#{@current_turn_owner}"], 'cardType': card}
+        io.sockets.emit "turn:draw_end", { 'player': @playerMap["#{@current_turn_owner}"], 'cardType': card }
 
       socket.on 'turn:action', (data)=>
         @state = @State['Action']
         actionType = data.actionType
         @actionStatus = actionType
 
-        switch actionType
-          when 'buying'
-            console.log 'cardを引いて下さい'
-          when 'sell'
-            console.log '売って下さい'
-          when 'create_product'
-            console.log '製造します'
+        console.log 'turn:action'
 
-        io.sockets.emit "turn:action_selected", {'turn_owner_name': @current_turn_owner, 'actionType': 'sell to Thailand'}
+        io.sockets.socket(socket.id).emit "turn:action_selected", {"action": actionType}
+
+      socket.on 'turn:buy', (data)=>
+        console.log 'buying'
+        country = data.country
+        amount = data.amount
+        price = 0
+        market_rest = ''
+        cash = ''
+        number_of_product = ''
+
+        # should have instance method
+        Country.findOne {'name': counrty}, (err, c)=>
+          c.market_rest += amount
+          price = c.buying_price
+          market_rest = c.market_rest
+          if c.market_rest > c.market_scale
+            io.socket.socket(socket.id).emit 'warn:cant_buy_from_country'
+            return
+          c.save (err) ->
+            console.log err if err
+
+        # should have instance method
+        player_name = @playerMap["#{@current_turn_owner}"]
+        Player.findOne 'name': player_name, (err, p)=>
+          p.number_of_product += amount
+          expenditure = (price * amount)
+          p.cash -= expenditure
+          number_of_product = p.number_of_product
+          cash = p.cash
+          p.save (err) ->
+            console.log err
+
+        params =
+         'player' : player_name
+         'country_name': country
+         'market_rest' : market_rest
+         'player' : player_name
+         'cash'  : cash
+         'number_of_product'  : number_of_product
+
+        io.sockets.emit "turn:action_buy_end", params
+
+      socket.on 'turn:sell', (data)=>
+        console.log 'sell'
+        country = data.country
+        amount = data.amount
+        price = 0
+        market_rest = ''
+        cash = ''
+        number_of_product = ''
+
+        Country.findOne 'name': counrty, (err, c)=>
+          c.market_rest = c.market_rest - amount
+          price = c.max_price
+          market_rest = c.market_rest
+          if c.market_rest < 0
+            io.socket.socket(socket.id).emit 'warn:cant_sell_to_country'
+            return
+          c.save (err) ->
+            console.log err if err
+
+        # should have instance method
+        player_name = @playerMap["#{@current_turn_owner}"]
+        Player.findOne 'name': player_name, (err, p)=>
+          tmp_income = (price * amount)
+          p.cash += tmp_income
+          p.number_of_product += amount
+          number_of_product = p.number_of_product
+          cash = p.cash
+          p.save (err) ->
+            console.log err
+
+        params =
+         'player' : player_name
+         'country_name': country
+         'market_rest' : market_rest
+         'player' : player_name
+         'cash'  : cash
+         'number_of_product'  : number_of_product
+
+        io.sockets.emit "turn:action_sell_end", params
 
       socket.on 'turn:bet', (data)=>
         # return unless @state is State['Draw']
@@ -131,9 +213,41 @@ class Game
         @otherEvent()
 
       socket.on 'chat:on', (data)=>
-        msg = data.msg
-        console.log 'msg:::', msg
-        io.sockets.emit "chat:send", "msg": msg
+        player_id = @getPlayerBySockId socket.id
+        player_name = @playerMap["#{player_id}"]
+
+        # chat
+        chat = new Chat()
+        chat.sender  = if player_name then player_name else 'player'
+        chat.message = data.msg
+        chat.save (err)->
+          console.log 'Err:', err if err
+
+        io.sockets.emit "chat:send", "sender": chat.sender, "message": chat.message
+
+      socket.on 'game:end', (data)=>
+        name = data.name
+        cash
+        income
+        email
+        Player.find {'name': name}, (err, p)->
+          cash = p.cash
+          income = p.income
+          email = p.email
+
+        con = mysql.createConnection
+          host: Conf.host
+          user: Conf.user
+          password: Conf.password
+        con.connect()
+
+        email = 'fjwr0516@gmail.com'
+        q = 'UPDATE Users SET cash = #{cash}, net_income = #{income} WHERE email = #{email}'
+        con.query q, (err, rows, fields)=>
+          console.log 'sql error:', err if err
+
+        con.end()
+        io.sockets.emit 'game:ended', "name": email
 
       socket.on 'turn:sample', (data)=>
         socket.emit "sample", "sample"
@@ -154,6 +268,10 @@ class Game
 
   getTurnPlayer: =>
     _.first @ids
+
+  getPlayerBySockId: (sock_id)=>
+    for id, _sock_id of @socketMap
+      id if sock_id == _sock_id
 
   createGameId: =>
     initial_id = 0

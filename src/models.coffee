@@ -2,7 +2,8 @@ mongoose = require 'mongoose'
 
 PlayerSchema = new mongoose.Schema
   name: type: String
-  cache: type: Number, default: 30.0
+  email: type: String
+  cash: type: Number, default: 30.0
   income: type: Number, default: 0.0
   game_id: type: Number
   country: type: String
@@ -22,6 +23,10 @@ CountrySchema = new mongoose.Schema
 
 GameDataSchema = new mongoose.Schema
   player_ids: type: [], values: [Number]
+
+ChatSchema = new mongoose.Schema
+  sender:  type: String
+  message: type: String
 
 CalculatorSchema = new mongoose.Schema
   net_profit: type: Number, default: 30.0
@@ -52,16 +57,14 @@ CalculatorSchema = new mongoose.Schema
   initial_capital: type: Number, default: 30.0
   initialdebt: type: Number, default: 0.0
 
-
-
-
 url = 'mongodb://127.0.0.1/ws-nmg'
 
 db = mongoose.createConnection url, (err, res)->
   console.log 'err:', err if err
 
-exports.Player  = db.model 'Player', PlayerSchema
-exports.Product = db.model 'Product', ProductSchema
-exports.Country = db.model 'Country', CountrySchema
+exports.Player   = db.model 'Player', PlayerSchema
+exports.Product  = db.model 'Product', ProductSchema
+exports.Country  = db.model 'Country', CountrySchema
 exports.GameData = db.model 'GameData', GameDataSchema
+exports.Chat     = db.model 'Chat', ChatSchema
 exports.Calculator = db.model 'Calculator', CalculatorSchema

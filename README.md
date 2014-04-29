@@ -20,6 +20,8 @@ $ git clone git@github.com:neko2014fresh/ws-nmg.git
 $ cd ws-nmg
 $ npm install
 $ coffee app.coffee
+$ cp config/mysql_config_sample.coffee config/mysql_config.coffee
+#edit on your mysql config
 ```
 
 ##クライアントサイドのcoffeeのコンパイル

@@ -12,6 +12,7 @@
       return console.info('check update');
     }, 1000);
     socket.emit('get_all_country');
+    socket.emit('get_all_chat');
     $('#register-country-btn').on('click', function() {
       var player_name, register_country;
       player_name = $('#player-name').val() === "" ? "小保方晴子" : $('#player-name').val();
@@ -47,9 +48,13 @@
     $('#chat-button').on('click', function() {
       var chat;
       chat = $("#chat-msg").val();
+      $("#chat-msg").val("");
       return socket.emit('chat:on', {
         "msg": chat
       });
+    });
+    $('#game-end').on('click', function() {
+      return socket.emit('game:end');
     });
     socket.on('turn:country_selected', function(data) {
       return alert("" + data.user_id + "が" + data.country + "を選びました。");
@@ -65,7 +70,18 @@
       return alert("" + data.player + "が" + cardType + "を引きました。" + data.player + "は行動を選択して下さい");
     });
     socket.on('turn:action_selected', function(data) {
-      return alert(data.actionType);
+      var actionType, amount, targetCountry;
+      actionType = data.action;
+      targetCountry = $('#target-country').val();
+      amount = $('#amount').val();
+      return socket.emit("turn:" + actionType, {
+        'country': targetCountry,
+        'amount': amount
+      });
+    });
+    socket.on("turn:action_buy_end", function(data) {
+      var country;
+      return country = data.country_name;
     });
     socket.on('all_country', function(data) {
       if ($('#countries').children().length === 0) {
@@ -76,19 +92,36 @@
         });
       }
     });
+    socket.on('all_chat', function(data) {
+      if ($('#chat-area').children().length === 0) {
+        return _.map(data.chats, function(chat) {
+          var html;
+          html = "        <div class='sender'>          " + chat.sender + " :        </div>        <div class='message'>          " + chat.message + "        </div>        ";
+          return $('#chat-area').append(html);
+        });
+      }
+    });
     socket.on('update_country_owner_name', function(data) {
       var country, player_name;
       country = data.country;
       player_name = data.name;
       return $('#' + ("" + country + " .owner")).html("本社..." + player_name);
     });
+    socket.on('initial_player_status', function(data) {
+      var html;
+      html = "      <div class='name'>        名前:" + data.name + "      </div>      <div class='country'>        国:" + data.country + "      </div>      <div class='cash'>        キャッシュ:" + data.cash + "      </div>      <div class='income'>        純利益:" + data.income + "      </div>      <div class='number-of-product'>        製品数:" + data.product + "      </div>    ";
+      return $('#player-status').append(html);
+    });
     socket.on("warn:not_your_turn", function(msg) {
       return alert('おめえのターンじゃねぇから！');
     });
     socket.on("chat:send", function(data) {
       var html;
-      html = "      <div class='msg-sender'>        " + data.msg + "      </div>    ";
+      html = "      <div class='sender'>        " + data.sender + " :      </div>      <div class='message'>        " + data.message + "      </div>    ";
       return $("#chat-area").append(html);
+    });
+    socket.on('game:ended', function(data) {
+      return alert('game終了だ！去れ！');
     });
     socket.on("warn:already_init", function(msg) {
       return alert('もう登録しとるやろ！');
