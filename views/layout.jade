@@ -12,27 +12,6 @@ html
     script(src='/javascripts/game.js')
     script(src='/bootstrap/js/bootstrap.min.js')
 
-
-  //- body
-  //-   header(id='player-status')
-
-  //-   label(for="player-name") player name
-  //-   br
-  //-   input(type="text", name="player-name", id="player-name", class="span8")
-  //-   br
-  //-   br
-  //-   select(id="register-country", name="register-country")
-  //-       option(value='Thailand') thailand
-  //-       option(value='Vietnum') vietnum
-  //-       option(value='Singapore') Singapore
-  //-       option(value='Malaysia') Malaysia
-  //-   br
-  //-   button(id="register-country-btn") decide
-  //-   br
-  //-   br
-  //-   div(id="countries")
-  //-   br
-
   body
     header.navbar.navbar-fixed-top.navbar-inverse
       div.navbar-inner
@@ -40,11 +19,11 @@ html
           nav
             ul.nav.navbar-nav.pull-left.span3
               li
-                h1 NMG
+                h1.white NMG
             div.span3
             ul.nav.navbar-nav.span3
               li
-                h4 player name
+                h4.white player name
                 label(for="player-name")
                 input(type="text", name="player-name", id="player-name")
             div.nav.navbar-nav.pull-right.span3
@@ -66,40 +45,52 @@ html
           //- input(type="text", name="message", id="message")
           br
           button.btn(id="draw_card") draw card
-          button.btn(id="turn_start") turn start
           br
           br
-          //- 行動選択
-          label(for="action-type")
-            div.sa_font Select-actions
-          select(id="action-type", name="action")
-              option(value='buy') buy
-              option(value='sell') sell
-              option(value='create_product') create_product
-          br
-          //- 購入部分
-          label(for="target-country")
-            div.sa_font target-country
-          select(id="target-country", name="action")
-              option(value='Thailand') thailand
-              option(value='Vietnum') vietnum
-              option(value='Singapore') Singapore
-              option(value='Malaysia') Malaysia
-          br
-          label(for="amount")
-          div.sa_font Amount
-          input(type="text", name="amount", id="amount")
-          br
-          button.btn(id="action-btn") Send Action
+          .btn-group
+            button.btn(id="turn_start") turn start
+            button.btn(id="turn_end") turn end
           br
           br
+          div.size23 A-action
+          div.menu-border
+            //- 行動選択
+            br
+            label(for="action-type")
+              div.size17 Select-actions
+            select(id="action-type", name="action")
+                option(value='buy') buy
+                option(value='sell') sell
+                option(value='create_product') create_product
+            br
+            //- 購入部分
+            label(for="target-country")
+              div.size17 target-country
+            select(id="target-country", name="action")
+                option(value='Thailand') thailand
+                option(value='Vietnum') vietnum
+                option(value='Singapore') Singapore
+                option(value='Malaysia') Malaysia
+            br
+            label(for="amount")
+            div.size17 Amount
+            input(type="text", name="amount", id="amount")
+            br
+            div.center
+              button.btn-info(id="action-btn") Send Action
+            br
           br
-          label(for="bet-money")
-            div.sa_font money
-          input(id="bet-money", name="bet-money", type="text")
-          button.btn(id="bet-money-btn", name="bet-money-btn") bet-money
-          button.btn(id="turn_end") turn end
-          div(id="current-notification")
+          br
+          div.size23 Auction
+          div.menu-border
+            br
+            label(for="bet-money")
+              div.size17 Money
+            input(id="bet-money", name="bet-money", type="text")
+            div.center
+              button.btn-info(id="bet-money-btn", name="bet-money-btn") bet-money
+            div(id="current-notification")
+            br
         //- 真ん中の枠
         div.span6
           div.text-center.line-menu-center Market
