@@ -38,74 +38,80 @@ html
       div.navbar-inner
         div.container
           nav
-            ul.nav.navbar-nav.pull-left
+            ul.nav.navbar-nav.pull-left.span3
               li
                 h1 NMG
-            ul.nav.navbar-nav.pull-right
+            div.span3
+            ul.nav.navbar-nav.span3
               li
                 h4 player name
                 label(for="player-name")
-                input(type="text", name="player-name", id="player-name", class="span6")
-              li
+                input(type="text", name="player-name", id="player-name")
+            div.nav.navbar-nav.pull-right.span3
                 select(id="register-country", name="register-country")
-                    option(value='Thailand') thailand
-                    option(value='Vietnum') vietnum
-                    option(value='Singapore') Singapore
-                    option(value='Malaysia') Malaysia
-                br
+                    option(value='Thailand') タイ
+                    option(value='Vietnum') ベトナム
+                    option(value='Singapore') シンガポール
+                    option(value='Malaysia') マレーシア
+                button.btn(id="register-country-btn") 決定
+                    br
                 .btn-group
-                  button.btn(id="register-country-btn") decide
-                  button.btn(id="init-start") init:start
+                  button.btn(id="init-start") 登録
+                  button.btn(id="start") ゲーム開始！
     div.container
       div.row
+        //- 左側の枠
         div.span3
-          input(type="text", name="message", id="message")
+          div.text-center.line-menu-left Select Action
+          //- input(type="text", name="message", id="message")
           br
-          button.btn(id="start") start
           button.btn(id="draw_card") draw card
           button.btn(id="turn_start") turn start
           br
           br
-          label(for="target-country") target-country
+          //- 行動選択
+          label(for="action-type")
+            div.sa_font Select-actions
+          select(id="action-type", name="action")
+              option(value='buy') buy
+              option(value='sell') sell
+              option(value='create_product') create_product
           br
           //- 購入部分
+          label(for="target-country")
+            div.sa_font target-country
           select(id="target-country", name="action")
               option(value='Thailand') thailand
               option(value='Vietnum') vietnum
               option(value='Singapore') Singapore
               option(value='Malaysia') Malaysia
           br
-          label(for="amount") Amount
-          br
+          label(for="amount")
+          div.sa_font Amount
           input(type="text", name="amount", id="amount")
-          br
-          label(for="action-type") select-actions
-          br
-          //- 行動選択
-          select(id="action-type", name="action")
-              option(value='buy') buy
-              option(value='sell') sell
-              option(value='create_product') create_product
-          br
           br
           button.btn(id="action-btn") Send Action
           br
           br
-          label(for="bet-money") money
+          br
+          label(for="bet-money")
+            div.sa_font money
           input(id="bet-money", name="bet-money", type="text")
           button.btn(id="bet-money-btn", name="bet-money-btn") bet-money
           button.btn(id="turn_end") turn end
           div(id="current-notification")
-
-        div.span6 
-          div(id="countries")
+        //- 真ん中の枠
+        div.span6
+          div.text-center.line-menu-center Market
+          br
+          div.table(id="countries")
           //- br
           //- br
           //- br
 
-        div.span3 
-          //- チャット▶︎別枠を作成
-          label(for="chat") チャット
+        //- 右側の枠
+        div.span3
+          div.text-center.line-menu-right Chatroom
           br
           input(type="text", name="chat", id="chat-msg")
           button.btn(id="chat-button") 送信

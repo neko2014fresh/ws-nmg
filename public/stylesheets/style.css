@@ -2,6 +2,9 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+.countries {
+  display: inline-block;
+}
 body {
   padding-top: 100px;
 }
@@ -15,4 +18,29 @@ h4,
 h5,
 h6 {
   color: #fff;
+}
+.sa_font {
+  font-size: 17px;
+}
+.btn {
+  color: #000;
+  background-color: #fff;
+}
+.btn:hover {
+  color: #cc3314;
+}
+.line-menu-left {
+  font-size: 25px;
+  background-color: #9cf;
+  border: 1px solid #09c;
+}
+.line-menu-center {
+  font-size: 25px;
+  background-color: #cf9;
+  border: 1px solid #096;
+}
+.line-menu-right {
+  font-size: 25px;
+  background-color: #ffc;
+  border: 1px solid #f96;
 }
