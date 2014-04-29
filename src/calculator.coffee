@@ -119,3 +119,5 @@ class Calculator
 #calc = new Calculator
 #calc.sales += 100
 #calc.loan += 10
+
+exports.Calculator = Calculator
