@@ -12,6 +12,27 @@ html
     script(src='/javascripts/game.js')
     script(src='/bootstrap/js/bootstrap.min.js')
 
+
+  //- body
+  //-   header(id='player-status')
+
+  //-   label(for="player-name") player name
+  //-   br
+  //-   input(type="text", name="player-name", id="player-name", class="span8")
+  //-   br
+  //-   br
+  //-   select(id="register-country", name="register-country")
+  //-       option(value='Thailand') thailand
+  //-       option(value='Vietnum') vietnum
+  //-       option(value='Singapore') Singapore
+  //-       option(value='Malaysia') Malaysia
+  //-   br
+  //-   button(id="register-country-btn") decide
+  //-   br
+  //-   br
+  //-   div(id="countries")
+  //-   br
+
   body
     header.navbar.navbar-fixed-top.navbar-inverse
       div.navbar-inner
@@ -24,7 +45,7 @@ html
               li
                 h4 player name
                 label(for="player-name")
-                input(type="text", name="player-name", id="player-name", class="span8")
+                input(type="text", name="player-name", id="player-name", class="span6")
               li
                 select(id="register-country", name="register-country")
                     option(value='Thailand') thailand
@@ -35,56 +56,60 @@ html
                 .btn-group
                   button.btn(id="register-country-btn") decide
                   button.btn(id="init-start") init:start
-  body
-  body
-    header(id='player-status')
-    br
-    div(id="countries")
-    br
-    br
-    br
-    //- 登録：init-start
-    input(type="text", name="message", id="message")
-    button(id="start") start
-    button(id="draw_card") draw card
-    button(id="turn_start") turn start
-    br
-    br
-    label(for="target-country") target-country
-    br
-    //- 購入部分
-    select(id="target-country", name="action")
-        option(value='Thailand') thailand
-        option(value='Vietnum') vietnum
-        option(value='Singapore') Singapore
-        option(value='Malaysia') Malaysia
-    br
-    label(for="amount") Amount
-    br
-    input(type="text", name="amount", id="amount")
-    br
-    label(for="action-type") select-actions
-    br
-    //- 行動選択
-    select(id="action-type", name="action")
-        option(value='buy') buy
-        option(value='sell') sell
-        option(value='create_product') create_product
-    br
-    br
-    button(id="action-btn") Send Action
-    br
-    br
-    label(for="bet-money") money
-    input(id="bet-money", name="bet-money", type="text")
-    button(id="bet-money-btn", name="bet-money-btn") bet-money
-    button(id="turn_end") turn end
-    div(id="current-notification")
+    div.container
+      div.row
+        div.span3
+          input(type="text", name="message", id="message")
+          br
+          button.btn(id="start") start
+          button.btn(id="draw_card") draw card
+          button.btn(id="turn_start") turn start
+          br
+          br
+          label(for="target-country") target-country
+          br
+          //- 購入部分
+          select(id="target-country", name="action")
+              option(value='Thailand') thailand
+              option(value='Vietnum') vietnum
+              option(value='Singapore') Singapore
+              option(value='Malaysia') Malaysia
+          br
+          label(for="amount") Amount
+          br
+          input(type="text", name="amount", id="amount")
+          br
+          label(for="action-type") select-actions
+          br
+          //- 行動選択
+          select(id="action-type", name="action")
+              option(value='buy') buy
+              option(value='sell') sell
+              option(value='create_product') create_product
+          br
+          br
+          button.btn(id="action-btn") Send Action
+          br
+          br
+          label(for="bet-money") money
+          input(id="bet-money", name="bet-money", type="text")
+          button.btn(id="bet-money-btn", name="bet-money-btn") bet-money
+          button.btn(id="turn_end") turn end
+          div(id="current-notification")
 
-    //- チャット▶︎別枠を作成
-    label(for="chat") チャット
-    br
-    input(type="text", name="chat", id="chat-msg")
-    button(id="chat-button") 送信
-    br
-    div(id="chat-area")
+        div.span6 
+          div(id="countries")
+          //- br
+          //- br
+          //- br
+
+        div.span3 
+          //- チャット▶︎別枠を作成
+          label(for="chat") チャット
+          br
+          input(type="text", name="chat", id="chat-msg")
+          button.btn(id="chat-button") 送信
+          br
+          div(id="chat-area")
+
+    
