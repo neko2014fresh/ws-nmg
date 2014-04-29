@@ -12,7 +12,9 @@ io        = require 'socket.io'
 GLOBAL._  = require 'underscore'
 GLOBAL._.str = require 'underscore.string'
 GLOBAL.Card = require('./src/card').Card
+GLOBAL.Conf = require('./config/mysql_config').Conf
 mongoose  = require 'mongoose'
+GLOBAL.mysql = require 'mysql'
 {Game}    = require('./src/game')
 {Countries} = require './config/country_seed'
 app       = express()
@@ -34,7 +36,7 @@ app.use app.router
 app.use require('stylus').middleware(path.join(__dirname, 'public'))
 app.use express.static(path.join(__dirname, "public"))
 
-#settings models:w
+#settings models
 GLOBAL.Player  = app.settings.models.Player
 GLOBAL.Country = app.settings.models.Country
 GLOBAL.Product = app.settings.models.Product

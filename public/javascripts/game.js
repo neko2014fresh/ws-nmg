@@ -12,6 +12,7 @@
       return console.info('check update');
     }, 1000);
     socket.emit('get_all_country');
+    socket.emit('get_all_chat');
     $('#register-country-btn').on('click', function() {
       var player_name, register_country;
       player_name = $('#player-name').val() === "" ? "小保方晴子" : $('#player-name').val();
@@ -47,9 +48,13 @@
     $('#chat-button').on('click', function() {
       var chat;
       chat = $("#chat-msg").val();
+      $("#chat-msg").val("");
       return socket.emit('chat:on', {
         "msg": chat
       });
+    });
+    $('#game-end').on('click', function() {
+      return socket.emit('game:end');
     });
     socket.on('turn:country_selected', function(data) {
       return alert("" + data.user_id + "が" + data.country + "を選びました。");
@@ -74,12 +79,25 @@
         'amount': amount
       });
     });
+    socket.on("turn:action_buy_end", function(data) {
+      var country;
+      return country = data.country_name;
+    });
     socket.on('all_country', function(data) {
       if ($('#countries').children().length === 0) {
         return _.map(data.countries, function(country) {
           var html;
           html = "          <br>          <div id='" + country.name + "' class='countries'>            <div class='country-name'>              国名:..." + country.name + "            </div>            <div class='market-scale'>              市場規模:..." + country.market_scale + "            </div>            <div class='market-rest'>              市場猶予:..." + country.market_rest + "            </div>            <div class='max-price'>              最高値:..." + country.max_price + "            </div>            <div class='buying_price'>              仕入れ値:..." + country.buying_price + "            </div>            <div class='owner'>              本社..." + country.player_name + "            </div>          </div>          <br>          ";
           return $('#countries').append(html);
+        });
+      }
+    });
+    socket.on('all_chat', function(data) {
+      if ($('#chat-area').children().length === 0) {
+        return _.map(data.chats, function(chat) {
+          var html;
+          html = "        <div class='sender'>          " + chat.sender + " :        </div>        <div class='message'>          " + chat.message + "        </div>        ";
+          return $('#chat-area').append(html);
         });
       }
     });
@@ -91,7 +109,7 @@
     });
     socket.on('initial_player_status', function(data) {
       var html;
-      html = "      <div class='name'>        名前:" + data.name + "      </div>      <div class='country'>        国:" + data.country + "      </div>      <div class='cache'>        キャッシュ:" + data.cache + "      </div>      <div class='income'>        純利益:" + data.income + "      </div>      <div class='number-of-product'>        製品数:" + data.product + "      </div>    ";
+      html = "      <div class='name'>        名前:" + data.name + "      </div>      <div class='country'>        国:" + data.country + "      </div>      <div class='cash'>        キャッシュ:" + data.cash + "      </div>      <div class='income'>        純利益:" + data.income + "      </div>      <div class='number-of-product'>        製品数:" + data.product + "      </div>    ";
       return $('#player-status').append(html);
     });
     socket.on("warn:not_your_turn", function(msg) {
@@ -99,8 +117,11 @@
     });
     socket.on("chat:send", function(data) {
       var html;
-      html = "      <div class='msg-sender'>        " + data.msg + "      </div>    ";
+      html = "      <div class='sender'>        " + data.sender + " :      </div>      <div class='message'>        " + data.message + "      </div>    ";
       return $("#chat-area").append(html);
+    });
+    socket.on('game:ended', function(data) {
+      return alert('game終了だ！去れ！');
     });
     socket.on("warn:already_init", function(msg) {
       return alert('もう登録しとるやろ！');

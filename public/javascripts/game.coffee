@@ -9,7 +9,8 @@ $(->
     console.info 'check update'
   , 1000
 
-  socket.emit('get_all_country')
+  socket.emit 'get_all_country'
+  socket.emit 'get_all_chat'
 
   $('#register-country-btn').on 'click', ->
     player_name = if $('#player-name').val() is "" then "小保方晴子" else $('#player-name').val()
@@ -38,7 +39,11 @@ $(->
 
   $('#chat-button').on 'click', ->
     chat = $("#chat-msg").val()
+    $("#chat-msg").val ""
     socket.emit 'chat:on', "msg": chat
+
+  $('#game-end').on 'click', ->
+    socket.emit 'game:end' 
 
   socket.on 'turn:country_selected', (data)->
     alert("#{data.user_id}が#{data.country}を選びました。")
@@ -58,6 +63,10 @@ $(->
     targetCountry = $('#target-country').val()
     amount = $('#amount').val()
     socket.emit "turn:#{actionType}", 'country': targetCountry, 'amount': amount
+
+  socket.on "turn:action_buy_end", (data)=>
+    country = data.country_name
+    # $("#" + "#{counrty}")
 
   socket.on 'all_country', (data)=>
     if $('#countries').children().length == 0
@@ -88,6 +97,19 @@ $(->
           "
         $('#countries').append(html)
 
+  socket.on 'all_chat', (data)=>
+    if $('#chat-area').children().length == 0
+      _.map data.chats, (chat)=>
+        html = "
+        <div class='sender'>
+          #{chat.sender} :
+        </div>
+        <div class='message'>
+          #{chat.message}
+        </div>
+        "
+        $('#chat-area').append html
+
   socket.on 'update_country_owner_name', (data) =>
     country = data.country
     player_name = data.name
@@ -101,8 +123,8 @@ $(->
       <div class='country'>
         国:#{data.country}
       </div>
-      <div class='cache'>
-        キャッシュ:#{data.cache}
+      <div class='cash'>
+        キャッシュ:#{data.cash}
       </div>
       <div class='income'>
         純利益:#{data.income}
@@ -118,11 +140,17 @@ $(->
 
   socket.on "chat:send", (data)=>
     html = "
-      <div class='msg-sender'>
-        #{data.msg}
+      <div class='sender'>
+        #{data.sender} :
+      </div>
+      <div class='message'>
+        #{data.message}
       </div>
     "
     $("#chat-area").append(html)
+
+  socket.on 'game:ended', (data)=>
+    alert('game終了だ！去れ！')
 
   socket.on "warn:already_init", (msg)=>
     alert('もう登録しとるやろ！')
