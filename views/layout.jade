@@ -25,19 +25,19 @@ html
             div#game-status.span3
               #turn-owner.white.status
                 .field
-                  現在のターン :    
+                  div This turn :    
                 .value.white
               #player-name.white.status
                 .field
-                  あなた :     
+                  div Your name :     
                 .value
               #cash.white.status
                 .field
-                キャッシュ :     
+                  div Cash :     
                 .value.white
               #stock.white.status
                 .field
-                  製品ストック :    
+                  div Product stock :    
                 .value.white
 
             ul.nav.navbar-nav.span3
@@ -122,17 +122,17 @@ html
           table.table.table-striped.table-bordered(id="countries")
             thead
               tr
-                th 国名
-                th 市場規模
-                th 市場猶予
-                th 最高値
-                th 仕入れ値
-                th 本社
+                th Country name
+                th Market scale
+                th Market demand
+                th Max price
+                th Buying price
+                th Head office
             tbody
         //- 右側の枠
         div.span3
           div.text-center.line-menu-right Chatroom
-          br
+          
           input(type="text", name="chat", id="chat-msg")
           button.btn(id="chat-button") 送信
           br
