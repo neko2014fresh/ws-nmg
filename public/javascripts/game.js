@@ -13,9 +13,10 @@
     }, 1000);
     socket.emit('get_all_country');
     socket.emit('get_all_chat');
+    socket.emit('get_current_turn_owner');
     $('#register-country-btn').on('click', function() {
       var player_name, register_country;
-      player_name = $('#player-name').val() === "" ? "小保方晴子" : $('#player-name').val();
+      player_name = $('#player-name-form').val() === "" ? "小保方晴子" : $('#player-name-form').val();
       register_country = $('#register-country').val();
       return socket.emit("save_player_and_country", {
         'player_name': player_name,
@@ -23,6 +24,7 @@
       });
     });
     $('#init-start').on('click', function() {
+      socket.emit('get_current_turn_owner');
       return socket.emit('turn:init_start');
     });
     $('#start').on('click', function() {
@@ -66,9 +68,8 @@
       return alert("" + data.name + "のターンです。");
     });
     socket.on('turn:draw_end', function(data) {
-      debugger;
       console.info("draw_end");
-      return alert("" + data.player + "が" + cardType + "を引きました。" + data.player + "は行動を選択して下さい");
+      return alert("" + data.player + "が" + data.cardType + "を引きました。" + data.player + "は行動を選択して下さい");
     });
     socket.on('turn:action_selected', function(data) {
       var actionType, amount, targetCountry;
@@ -108,10 +109,13 @@
       player_name = data.name;
       return $('#' + ("" + country + " .owner")).html("本社..." + player_name);
     });
+    socket.on('current_turn_owner', function(data) {
+      return $('#game-status #turn-owner .value').html(data.turn_owner_name);
+    });
     socket.on('initial_player_status', function(data) {
-      var html;
-      html = "      <div class='name'>        名前:" + data.name + "      </div>      <div class='country'>        国:" + data.country + "      </div>      <div class='cash'>        キャッシュ:" + data.cash + "      </div>      <div class='income'>        純利益:" + data.income + "      </div>      <div class='number-of-product'>        製品数:" + data.product + "      </div>    ";
-      return $('#player-status').append(html);
+      $('#game-status #player-name .value').html(data.name);
+      $('#game-status #cash .value').html(data.cash);
+      return $('#game-status #stock .value').html(data.product);
     });
     socket.on("warn:not_your_turn", function(msg) {
       return alert('おめえのターンじゃねぇから！');
