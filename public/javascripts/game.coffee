@@ -69,33 +69,20 @@ $(->
     # $("#" + "#{counrty}")
 
   socket.on 'all_country', (data)=>
-    if $('#countries').children().length == 0
+    if $('#countries tbody').children().length == 0
       _.map data.countries, (country)=>
+        # Market Data
         html = "
-          <br>
-          <div id='#{country.name}' class='countries'>
-            <div class='country-name'>
-              国名:...#{country.name}
-            </div>
-            <div class='market-scale'>
-              市場規模:...#{country.market_scale}
-            </div>
-            <div class='market-rest'>
-              市場猶予:...#{country.market_rest}
-            </div>
-            <div class='max-price'>
-              最高値:...#{country.max_price}
-            </div>
-            <div class='buying_price'>
-              仕入れ値:...#{country.buying_price}
-            </div>
-            <div class='owner'>
-              本社...#{country.player_name}
-            </div>
-          </div>
-          <br>
-          "
-        $('#countries').append(html)
+          <tr id='#{country.name}'>
+            <td class='country-name'> #{country.name} </td>
+            <td class='market-scale'> #{country.market_scale} </td>
+            <td class='market-rest'> #{country.market_rest} </td>
+            <td class='max-price'> #{country.max_price} </td>
+            <td class='buying_price'> #{country.buying_price} </td>
+            <td class='owner'> #{country.player_name} </td>
+          </tr>
+        "
+        $('#countries tbody').append(html)
 
   socket.on 'all_chat', (data)=>
     if $('#chat-area').children().length == 0
