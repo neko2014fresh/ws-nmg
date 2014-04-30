@@ -121,7 +121,7 @@
       return $("#chat-area").append(html);
     });
     socket.on('game:ended', function(data) {
-      return alert('game終了だ！去れ！');
+      return alert('game終了だ！去れ！ 別に帰れって言ってるわけじゃないんだからねっっっ//');
     });
     socket.on("warn:already_init", function(msg) {
       return alert('もう登録しとるやろ！');

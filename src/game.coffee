@@ -54,11 +54,7 @@ class Game
         player.save (err)->
           console.log 'success for saving user' unless err
 
-        console.log 'country-name:', country
         Country.findOne {'name': country }, (err, c)=>
-          console.log 'err:', err
-          console.log 'country:', c
-          console.log 'player::', player
           c.player_id = player.game_id
           c.player_name = player.name
           c.save (err)=>
@@ -92,15 +88,13 @@ class Game
         console.info "turn:draw"
         @state = @State['Draw']
         if @validate_turn_and_player @current_turn_owner, socket
-          console.log 'io.sockets.emit'
-          console.log 'socket-id:::', socket.id
-          console.log 'socketMap:::', @socketMap
           io.sockets.socket(socket.id).emit 'warn:not_your_turn'
           return
 
         io.sockets.socket(socket.id).emit('warn:already_draw') unless @cardStatus is ''
         card = Card.draw()
         @cardStatus = card
+        console.log 'card:', card
         io.sockets.emit "turn:draw_end", { 'player': @playerMap["#{@current_turn_owner}"], 'cardType': card }
 
       socket.on 'turn:action', (data)=>
@@ -226,10 +220,10 @@ class Game
         io.sockets.emit "chat:send", "sender": chat.sender, "message": chat.message
 
       socket.on 'game:end', (data)=>
-        name = data.name
-        cash
-        income
-        email
+        name = @playerMap[@getPlayerBySockId(socket.id)]
+        cash = 30.0
+        income = 0.0
+        email = ''
         Player.find {'name': name}, (err, p)->
           cash = p.cash
           income = p.income
@@ -239,11 +233,12 @@ class Game
           host: Conf.host
           user: Conf.user
           password: Conf.password
+          database: Conf.database
         con.connect()
-
-        email = 'fjwr0516@gmail.com'
-        q = 'UPDATE Users SET cash = #{cash}, net_income = #{income} WHERE email = #{email}'
-        con.query q, (err, rows, fields)=>
+        
+        email = 'r-fujiwara@nekojarashi.com'
+        q = 'UPDATE users SET cashe = ?, net_profit = ? WHERE email = ?'
+        con.query q, [cash, income, email], (err, rows, fields)=>
           console.log 'sql error:', err if err
 
         con.end()
