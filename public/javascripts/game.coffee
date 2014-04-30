@@ -55,6 +55,7 @@ $(->
     alert("#{data.name}のターンです。")
 
   socket.on 'turn:draw_end', (data)->
+    debugger
     console.info "draw_end"
     alert("#{data.player}が#{cardType}を引きました。#{data.player}は行動を選択して下さい")
 
@@ -142,11 +143,13 @@ $(->
 
   socket.on "chat:send", (data)=>
     html = "
-      <div class='sender'>
-        #{data.sender} :
-      </div>
-      <div class='message'>
-        #{data.message}
+     <div class='chat-container'>
+        <div class='sender'>
+          #{data.sender} :
+        </div>
+        <div class='message'>
+          #{data.message}
+        </div>
       </div>
     "
     $("#chat-area").append(html)
