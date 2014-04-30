@@ -156,7 +156,7 @@ class Game
         cash = ''
         number_of_product = ''
 
-        Country.findOne 'name': counrty, (err, c)=>
+        Country.findOne 'name': country, (err, c)=>
           c.market_rest = c.market_rest - amount
           price = c.max_price
           market_rest = c.market_rest
