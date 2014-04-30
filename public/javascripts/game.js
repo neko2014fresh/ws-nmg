@@ -66,6 +66,7 @@
       return alert("" + data.name + "のターンです。");
     });
     socket.on('turn:draw_end', function(data) {
+      debugger;
       console.info("draw_end");
       return alert("" + data.player + "が" + cardType + "を引きました。" + data.player + "は行動を選択して下さい");
     });
@@ -96,7 +97,7 @@
       if ($('#chat-area').children().length === 0) {
         return _.map(data.chats, function(chat) {
           var html;
-          html = "        <div class='sender'>          " + chat.sender + " :        </div>        <div class='message'>          " + chat.message + "        </div>        ";
+          html = "        <div class='chat-container'>          <div class='sender'>            " + chat.sender + " :          </div>          <div class='message'>            " + chat.message + "          </div>        </div>        ";
           return $('#chat-area').append(html);
         });
       }
@@ -117,7 +118,7 @@
     });
     socket.on("chat:send", function(data) {
       var html;
-      html = "      <div class='sender'>        " + data.sender + " :      </div>      <div class='message'>        " + data.message + "      </div>    ";
+      html = "     <div class='chat-container'>        <div class='sender'>          " + data.sender + " :        </div>        <div class='message'>          " + data.message + "        </div>      </div>    ";
       return $("#chat-area").append(html);
     });
     socket.on('game:ended', function(data) {

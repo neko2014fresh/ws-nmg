@@ -116,12 +116,12 @@ class Game
         number_of_product = ''
 
         # should have instance method
-        Country.findOne {'name': counrty}, (err, c)=>
+        Country.findOne {'name': country}, (err, c)=>
           c.market_rest += amount
           price = c.buying_price
           market_rest = c.market_rest
           if c.market_rest > c.market_scale
-            io.socket.socket(socket.id).emit 'warn:cant_buy_from_country'
+            io.sockets.socket(socket.id).emit 'warn:cant_buy_from_country'
             return
           c.save (err) ->
             console.log err if err
@@ -156,12 +156,12 @@ class Game
         cash = ''
         number_of_product = ''
 
-        Country.findOne 'name': counrty, (err, c)=>
+        Country.findOne 'name': country, (err, c)=>
           c.market_rest = c.market_rest - amount
           price = c.max_price
           market_rest = c.market_rest
           if c.market_rest < 0
-            io.socket.socket(socket.id).emit 'warn:cant_sell_to_country'
+            io.sockets.socket(socket.id).emit 'warn:cant_sell_to_country'
             return
           c.save (err) ->
             console.log err if err
