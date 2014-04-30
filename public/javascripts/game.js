@@ -107,7 +107,7 @@
       var country, player_name;
       country = data.country;
       player_name = data.name;
-      return $('#' + ("" + country + " .owner")).html("本社..." + player_name);
+      return $('#' + ("" + country + " .owner")).html(player_name);
     });
     socket.on('current_turn_owner', function(data) {
       return $('#game-status #turn-owner .value').html(data.turn_owner_name);

@@ -104,7 +104,7 @@ $(->
   socket.on 'update_country_owner_name', (data) =>
     country = data.country
     player_name = data.name
-    $('#' + "#{country} .owner").html("本社...#{player_name}")
+    $('#' + "#{country} .owner").html("#{player_name}")
 
   socket.on 'current_turn_owner', (data)->
     $('#game-status #turn-owner .value').html(data.turn_owner_name)
