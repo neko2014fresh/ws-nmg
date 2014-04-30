@@ -115,11 +115,16 @@ html
         div.span6
           div.text-center.line-menu-center Market
           br
-          div.table(id="countries")
-          //- br
-          //- br
-          //- br
-
+          table.table.table-striped.table-bordered(id="countries")
+            thead
+              tr
+                th 国名
+                th 市場規模
+                th 市場猶予
+                th 最高値
+                th 仕入れ値
+                th 本社
+            tbody
         //- 右側の枠
         div.span3
           div.text-center.line-menu-right Chatroom
