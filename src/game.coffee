@@ -221,8 +221,8 @@ class Game
 
       socket.on 'game:end', (data)=>
         name = @playerMap[@getPlayerBySockId(socket.id)]
-        cash = ''
-        income = ''
+        cash = 30.0
+        income = 0.0
         email = ''
         Player.find {'name': name}, (err, p)->
           cash = p.cash
@@ -235,9 +235,9 @@ class Game
           password: Conf.password
           database: Conf.database
         con.connect()
-
-        email = 'fjwr0516@gmail.com'
-        q = 'UPDATE Users SET cash = ?, net_profit = ? WHERE email = ?'
+        
+        email = 'r-fujiwara@nekojarashi.com'
+        q = 'UPDATE users SET cashe = ?, net_profit = ? WHERE email = ?'
         con.query q, [cash, income, email], (err, rows, fields)=>
           console.log 'sql error:', err if err
 

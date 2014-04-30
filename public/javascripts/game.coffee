@@ -150,7 +150,7 @@ $(->
     $("#chat-area").append(html)
 
   socket.on 'game:ended', (data)=>
-    alert('game終了だ！去れ！')
+    alert('game終了だ！去れ！ 別に帰れって言ってるわけじゃないんだからねっっっ//')
 
   socket.on "warn:already_init", (msg)=>
     alert('もう登録しとるやろ！')
