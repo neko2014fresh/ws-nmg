@@ -6,6 +6,7 @@ html
     link(rel='stylesheet', href='/bootstrap/css/bootstrap-responsive.min.css') 
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/chat.css')
+    link(rel='stylesheet', href='/stylesheets/header.css')
     link(rel='stylesheet', href='/stylesheets/style.styl')
     script(src='http://code.jquery.com/jquery-2.1.0.min.js')
     script(src='http://underscorejs.org/underscore-min.js')
@@ -22,17 +23,28 @@ html
               li
                 h1.white NMG
             div#game-status.span3
-              #turn-owner
-                現在のターン
-              #player-name
-                プレイヤー
-              
+              #turn-owner.white.status
+                .field
+                  現在のターン :    
+                .value.white
+              #player-name.white.status
+                .field
+                  あなた :     
+                .value
+              #cash.white.status
+                .field
+                キャッシュ :     
+                .value.white
+              #stock.white.status
+                .field
+                  製品ストック :    
+                .value.white
 
             ul.nav.navbar-nav.span3
               li
                 h4.white player name
                 label(for="player-name")
-                input(type="text", name="player-name", id="player-name")
+                input(type="text", name="player-name", id="player-name-form")
             div.nav.navbar-nav.pull-right.span3
                 select(id="register-country", name="register-country")
                     option(value='Thailand') タイ

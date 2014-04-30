@@ -11,13 +11,15 @@ $(->
 
   socket.emit 'get_all_country'
   socket.emit 'get_all_chat'
+  socket.emit 'get_current_turn_owner'
 
   $('#register-country-btn').on 'click', ->
-    player_name = if $('#player-name').val() is "" then "小保方晴子" else $('#player-name').val()
+    player_name = if $('#player-name-form').val() is "" then "小保方晴子" else $('#player-name-form').val()
     register_country = $('#register-country').val()
     socket.emit "save_player_and_country", 'player_name': player_name, 'country': register_country
 
   $('#init-start').on 'click', ->
+    socket.emit 'get_current_turn_owner'
     socket.emit('turn:init_start')
 
   $('#start').on 'click', ->
@@ -55,9 +57,8 @@ $(->
     alert("#{data.name}のターンです。")
 
   socket.on 'turn:draw_end', (data)->
-    debugger
     console.info "draw_end"
-    alert("#{data.player}が#{cardType}を引きました。#{data.player}は行動を選択して下さい")
+    alert("#{data.player}が#{data.cardType}を引きました。#{data.player}は行動を選択して下さい")
 
   socket.on 'turn:action_selected', (data)=>
     actionType = data.action
@@ -118,25 +119,31 @@ $(->
     player_name = data.name
     $('#' + "#{country} .owner").html("本社...#{player_name}")
 
+  socket.on 'current_turn_owner', (data)->
+    $('#game-status #turn-owner .value').html(data.turn_owner_name)
+
   socket.on 'initial_player_status', (data)=>
-    html = "
-      <div class='name'>
-        名前:#{data.name}
-      </div>
-      <div class='country'>
-        国:#{data.country}
-      </div>
-      <div class='cash'>
-        キャッシュ:#{data.cash}
-      </div>
-      <div class='income'>
-        純利益:#{data.income}
-      </div>
-      <div class='number-of-product'>
-        製品数:#{data.product}
-      </div>
-    "
-    $('#player-status').append(html)
+    $('#game-status #player-name .value').html(data.name)
+    $('#game-status #cash .value').html(data.cash)
+    $('#game-status #stock .value').html(data.product)
+    # html = "
+    #   <div class='name'>
+    #     名前:#{data.name}
+    #   </div>
+    #   <div class='country'>
+    #     国:#{data.country}
+    #   </div>
+    #   <div class='cash'>
+    #     キャッシュ:#{data.cash}
+    #   </div>
+    #   <div class='income'>
+    #     純利益:#{data.income}
+    #   </div>
+    #   <div class='number-of-product'>
+    #     製品数:#{data.product}
+    #   </div>
+    # "
+    # $('#player-status').append(html)
 
   socket.on "warn:not_your_turn", (msg)=>
     alert('おめえのターンじゃねぇから！')
