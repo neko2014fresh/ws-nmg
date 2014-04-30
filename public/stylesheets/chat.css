@@ -1,0 +1,13 @@
+#chat-area {
+  display: block;
+}
+#chat-area .chat-container {
+  padding: 10px 0px 10px;
+}
+#chat-area .chat-container .sender {
+  font-weight: bold;
+  display: inline-block;
+}
+#chat-area .chat-container .message {
+  display: inline-block;
+}

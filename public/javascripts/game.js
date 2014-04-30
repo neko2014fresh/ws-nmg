@@ -96,7 +96,7 @@
       if ($('#chat-area').children().length === 0) {
         return _.map(data.chats, function(chat) {
           var html;
-          html = "        <div class='sender'>          " + chat.sender + " :        </div>        <div class='message'>          " + chat.message + "        </div>        ";
+          html = "        <div class='chat-container'>          <div class='sender'>            " + chat.sender + " :          </div>          <div class='message'>            " + chat.message + "          </div>        </div>        ";
           return $('#chat-area').append(html);
         });
       }

@@ -101,11 +101,13 @@ $(->
     if $('#chat-area').children().length == 0
       _.map data.chats, (chat)=>
         html = "
-        <div class='sender'>
-          #{chat.sender} :
-        </div>
-        <div class='message'>
-          #{chat.message}
+        <div class='chat-container'>
+          <div class='sender'>
+            #{chat.sender} :
+          </div>
+          <div class='message'>
+            #{chat.message}
+          </div>
         </div>
         "
         $('#chat-area').append html
