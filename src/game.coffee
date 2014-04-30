@@ -227,9 +227,9 @@ class Game
 
       socket.on 'game:end', (data)=>
         name = data.name
-        cash
-        income
-        email
+        cash = ''
+        income = ''
+        email = ''
         Player.find {'name': name}, (err, p)->
           cash = p.cash
           income = p.income
@@ -239,11 +239,12 @@ class Game
           host: Conf.host
           user: Conf.user
           password: Conf.password
+          database: Conf.database
         con.connect()
 
         email = 'fjwr0516@gmail.com'
-        q = 'UPDATE Users SET cash = #{cash}, net_income = #{income} WHERE email = #{email}'
-        con.query q, (err, rows, fields)=>
+        q = 'UPDATE Users SET cash = ?, net_profit = ? WHERE email = ?'
+        con.query q, [cash, income, email], (err, rows, fields)=>
           console.log 'sql error:', err if err
 
         con.end()
