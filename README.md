@@ -24,6 +24,13 @@ $ cp config/mysql_config_sample.coffee config/mysql_config.coffee
 #edit on your mysql config
 ```
 
+- if you want to work specific port
+
+```
+$ PORT=7000 coffee app.coffee
+```
+
+
 ##クライアントサイドのcoffeeのコンパイル
 
 ```
