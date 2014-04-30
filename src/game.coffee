@@ -116,7 +116,7 @@ class Game
         number_of_product = ''
 
         # should have instance method
-        Country.findOne {'name': counrty}, (err, c)=>
+        Country.findOne {'name': country}, (err, c)=>
           c.market_rest += amount
           price = c.buying_price
           market_rest = c.market_rest
