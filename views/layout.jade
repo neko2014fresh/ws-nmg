@@ -47,15 +47,15 @@ html
                 input(type="text", name="player-name", id="player-name-form")
             div.nav.navbar-nav.pull-right.span3
                 select(id="register-country", name="register-country")
-                    option(value='Thailand') タイ
-                    option(value='Vietnum') ベトナム
-                    option(value='Singapore') シンガポール
-                    option(value='Malaysia') マレーシア
-                button.btn(id="register-country-btn") 決定
+                    option(value='Vietnum') Vietnum
+                    option(value='Singapore') Singapore
+                    option(value='Thailand') Thailand
+                    option(value='Malaysia') Malaysiaa
+                button.btn(id="register-country-btn") deside
                     br
                 .btn-group
-                  button.btn(id="init-start") 登録
-                  button.btn(id="start") ゲーム開始！
+                  button.btn(id="init-start") entry
+                  button.btn(id="start") Game start!
     div.container
       div.row
         //- 左側の枠
@@ -69,7 +69,7 @@ html
           .btn-group
             button.btn(id="turn_start") turn start
             button.btn(id="turn_end") turn end
-            button.btn(id="game-end") game end
+            
           br
           br
           div.size23 A-action
@@ -87,9 +87,9 @@ html
             label(for="target-country")
               div.size17 target-country
             select(id="target-country", name="action")
-                option(value='Thailand') thailand
-                option(value='Vietnum') vietnum
+                option(value='Vietnum') Vietnum
                 option(value='Singapore') Singapore
+                option(value='Thailand') Thailand
                 option(value='Malaysia') Malaysia
             br
             label(for="amount")
@@ -111,6 +111,10 @@ html
               button.btn-info(id="bet-money-btn", name="bet-money-btn") bet-money
             div(id="current-notification")
             br
+          br
+          br
+          div.center
+            button.btn-large.btn-warning(id="game-end") game end
         //- 真ん中の枠
         div.span6
           div.text-center.line-menu-center Market
