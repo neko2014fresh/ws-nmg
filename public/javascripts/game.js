@@ -56,9 +56,7 @@
       });
     });
     $('#game-end').on('click', function() {
-      return socket.emit('game:end');
-    });
-    socket.on('turn:country_selected', function(data) {
+      socket.emit('game:end');
       return alert("" + data.user_id + "が" + data.country + "を選びました。");
     });
     socket.on('turn:setting_msg', function(data) {
@@ -81,9 +79,12 @@
         'amount': amount
       });
     });
-    socket.on("turn:action_buy_end", function(data) {
-      var country;
-      return country = data.country_name;
+    socket.on("turn:action_end_for_country", function(data) {
+      return $("#" + ("" + data.name) + " .market-rest").html("" + data.market_rest);
+    });
+    socket.on("turn:action_end_for_player", function(data) {
+      $('#game-status #cash .value').html(data.cash);
+      return $('#game-status #stock .value').html(data.number_of_product);
     });
     socket.on('all_country', function(data) {
       if ($('#countries tbody').children().length === 0) {
@@ -124,6 +125,9 @@
       var html;
       html = "     <div class='chat-container'>        <div class='sender'>          " + data.sender + " :        </div>        <div class='message'>          " + data.message + "        </div>      </div>    ";
       return $("#chat-area").append(html);
+    });
+    socket.on('warn:cant_buy_from_country', function(data) {
+      return alert('残念やけどそっからは買えんて');
     });
     socket.on('game:ended', function(data) {
       return alert('game終了だ！去れ！ 別に帰れって言ってるわけじゃないんだからねっっっ//');

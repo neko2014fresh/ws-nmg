@@ -46,8 +46,6 @@ $(->
 
   $('#game-end').on 'click', ->
     socket.emit 'game:end' 
-
-  socket.on 'turn:country_selected', (data)->
     alert("#{data.user_id}が#{data.country}を選びました。")
 
   socket.on 'turn:setting_msg', (data)->
@@ -66,9 +64,12 @@ $(->
     amount = $('#amount').val()
     socket.emit "turn:#{actionType}", 'country': targetCountry, 'amount': amount
 
-  socket.on "turn:action_buy_end", (data)=>
-    country = data.country_name
-    # $("#" + "#{counrty}")
+  socket.on "turn:action_end_for_country", (data)=>
+    $("#" + "#{data.name}" + " .market-rest").html("#{data.market_rest}")
+
+  socket.on "turn:action_end_for_player", (data)=>
+    $('#game-status #cash .value').html(data.cash)
+    $('#game-status #stock .value').html(data.number_of_product)
 
   socket.on 'all_country', (data)=>
     if $('#countries tbody').children().length == 0
@@ -147,6 +148,9 @@ $(->
       </div>
     "
     $("#chat-area").append(html)
+
+  socket.on 'warn:cant_buy_from_country', (data)=>
+    alert('残念やけどそっからは買えんて')
 
   socket.on 'game:ended', (data)=>
     alert('game終了だ！去れ！ 別に帰れって言ってるわけじゃないんだからねっっっ//')
