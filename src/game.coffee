@@ -78,7 +78,6 @@ class Game
         for _id, _sock of @socketMap
           id = _id if _sock is socket.id
         name = @playerMap["#{id}"] unless id is ''
-        console.log 'playerMap::', @playerMap
         @current_turn_owner = id
 
         io.sockets.emit "turn:setting_msg", { 'player': name }
@@ -89,7 +88,6 @@ class Game
           io.sockets.socket(socket.id).emit 'warn:not_your_turn'
           return
         name = @playerMap["#{@current_turn_owner}"]
-        console.log 'turn:start::::::::name:', name
         io.sockets.emit 'turn:start_msg', { 'name': name }
 
       socket.on 'turn:draw', (data)=>
@@ -102,7 +100,6 @@ class Game
         io.sockets.socket(socket.id).emit('warn:already_draw') unless @cardStatus is ''
         card = Card.draw()
         @cardStatus = card
-        console.log 'card:', card
         io.sockets.emit "turn:draw_end", { 'player': @playerMap["#{@current_turn_owner}"], 'cardType': card }
 
       socket.on 'turn:action', (data)=>
@@ -118,6 +115,7 @@ class Game
         console.log 'buying'
         country = data.country
         amount = data.amount
+        console.log 'turn:buy::amount', amount
         price = 0
         market_rest = ''
         cash = ''
@@ -134,10 +132,18 @@ class Game
           c.save (err) ->
             console.log err if err
 
+          params = 
+            'name': country
+            'market_rest': market_rest
+
+          console.log 'country-params::', params
+
+          io.sockets.emit "turn:action_end_for_country", params
+
         # should have instance method
         player_name = @playerMap["#{@current_turn_owner}"]
         Player.findOne 'name': player_name, (err, p)=>
-          console.log "player------->", p
+          console.log 'find_player:', p
           p.number_of_product += amount
           expenditure = (price * amount)
           p.cash -= expenditure
@@ -146,15 +152,12 @@ class Game
           p.save (err) ->
             console.log err
 
-        params =
-         'player' : player_name
-         'country_name': country
-         'market_rest' : market_rest
-         'player' : player_name
-         'cash'  : cash
-         'number_of_product'  : number_of_product
+          params = 
+            'player': player_name
+            'cash': cash
+            'number_of_product': number_of_product
 
-        io.sockets.emit "turn:action_buy_end", params
+          io.sockets.emit "turn:action_end_for_player", params
 
       socket.on 'turn:sell', (data)=>
         console.log 'sell'
@@ -174,6 +177,10 @@ class Game
             return
           c.save (err) ->
             console.log err if err
+          params = 
+            'name': country
+            'market_rest': market_rest
+          io.sockets.emit "turn:action_end_for_country", params
 
         # should have instance method
         player_name = @playerMap["#{@current_turn_owner}"]
@@ -186,15 +193,14 @@ class Game
           p.save (err) ->
             console.log err
 
-        params =
-         'player' : player_name
-         'country_name': country
-         'market_rest' : market_rest
-         'player' : player_name
-         'cash'  : cash
-         'number_of_product'  : number_of_product
+          params = 
+            'player': player_name
+            'cash': cash
+            'number_of_product': number_of_product
 
-        io.sockets.emit "turn:action_sell_end", params
+          io.sockets.emit "turn:action_end_for_player", params
+
+
 
       socket.on 'turn:bet', (data)=>
         # return unless @state is State['Draw']
