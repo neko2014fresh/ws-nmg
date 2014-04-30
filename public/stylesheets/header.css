@@ -1,0 +1,7 @@
+#game-status .status {
+  display: block;
+}
+#game-status .status .field,
+#game-status .status .value {
+  display: inline-block;
+}

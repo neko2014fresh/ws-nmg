@@ -32,8 +32,16 @@ class Game
           console.log 'chat::obj', params
           io.sockets.emit 'all_chat', params
 
+      socket.on 'get_current_turn_owner', =>
+        player_id = @getTurnPlayer()
+        player_name = if player_id then @playerMap["#{player_id}"] else ''
+        params = 
+          'turn_owner_name': player_name
+        io.sockets.emit 'current_turn_owner', params
+
       socket.on 'save_player_and_country', (data)=>
         console.log 'country selected'
+        console.log 'client-data::::::', data
         player_name = data.player_name
         country = data.country
 
@@ -81,8 +89,8 @@ class Game
           io.sockets.socket(socket.id).emit 'warn:not_your_turn'
           return
         name = @playerMap["#{@current_turn_owner}"]
-
-        io.sockets.emit 'turn:starg_msg', { 'name': name }
+        console.log 'turn:start::::::::name:', name
+        io.sockets.emit 'turn:start_msg', { 'name': name }
 
       socket.on 'turn:draw', (data)=>
         console.info "turn:draw"
@@ -116,12 +124,12 @@ class Game
         number_of_product = ''
 
         # should have instance method
-        Country.findOne {'name': counrty}, (err, c)=>
+        Country.findOne {'name': country}, (err, c)=>
           c.market_rest += amount
           price = c.buying_price
           market_rest = c.market_rest
           if c.market_rest > c.market_scale
-            io.socket.socket(socket.id).emit 'warn:cant_buy_from_country'
+            io.sockets.socket(socket.id).emit 'warn:cant_buy_from_country'
             return
           c.save (err) ->
             console.log err if err
@@ -129,6 +137,7 @@ class Game
         # should have instance method
         player_name = @playerMap["#{@current_turn_owner}"]
         Player.findOne 'name': player_name, (err, p)=>
+          console.log "player------->", p
           p.number_of_product += amount
           expenditure = (price * amount)
           p.cash -= expenditure
@@ -156,12 +165,12 @@ class Game
         cash = ''
         number_of_product = ''
 
-        Country.findOne 'name': counrty, (err, c)=>
+        Country.findOne 'name': country, (err, c)=>
           c.market_rest = c.market_rest - amount
           price = c.max_price
           market_rest = c.market_rest
           if c.market_rest < 0
-            io.socket.socket(socket.id).emit 'warn:cant_sell_to_country'
+            io.sockets.socket(socket.id).emit 'warn:cant_sell_to_country'
             return
           c.save (err) ->
             console.log err if err
