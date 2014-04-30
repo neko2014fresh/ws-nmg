@@ -134,7 +134,7 @@ class Game
 
           params = 
             'name': country
-            'markert_rest': market_rest
+            'market_rest': market_rest
 
           console.log 'country-params::', params
 
@@ -179,7 +179,7 @@ class Game
             console.log err if err
           params = 
             'name': country
-            'markert_rest': market_rest
+            'market_rest': market_rest
           io.sockets.emit "turn:action_end_for_country", params
 
         # should have instance method

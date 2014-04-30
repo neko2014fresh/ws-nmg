@@ -65,6 +65,7 @@ $(->
     socket.emit "turn:#{actionType}", 'country': targetCountry, 'amount': amount
 
   socket.on "turn:action_end_for_country", (data)=>
+    rest = data.market_rest
     $("#" + "#{data.name}" + " .market-rest").html("#{data.market_rest}")
 
   socket.on "turn:action_end_for_player", (data)=>

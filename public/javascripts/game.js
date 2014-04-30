@@ -80,6 +80,8 @@
       });
     });
     socket.on("turn:action_end_for_country", function(data) {
+      var rest;
+      rest = data.market_rest;
       return $("#" + ("" + data.name) + " .market-rest").html("" + data.market_rest);
     });
     socket.on("turn:action_end_for_player", function(data) {
